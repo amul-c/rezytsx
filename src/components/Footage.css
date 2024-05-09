@@ -1,0 +1,11 @@
+#boxes{
+    @media only screen and (max-width: 639px) {
+      flex-direction: column;
+      
+      }
+}
+
+#box{
+    @media only screen and (max-width: 639px) {
+    width:100%}
+}
