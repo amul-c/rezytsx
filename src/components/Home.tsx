@@ -7,11 +7,13 @@ import OfflineDevices from './OfflineDevices/OfflineDevices';
 import InstalledDevices from './InstalledDevices/InstalledDevices';
 import PropertyInfo from './PropertyInfo/PropertyInfo';
 import { useState } from "react";
+import Navbar from "./Navbar";
 const Home = () => {
 
   const [propertyId,setPropertyId]=useState('1')
   return (
     <>
+    <Navbar />
       <div id="mainContainer" className="bg-[#D8DFEA] flex flex-row gap-4 relative top-[6rem]">
         <div id="leftContainer" style={{ width: 'calc(100% - 25rem)' }} className="flex flex-col gap-6 bg-[#EDF1F7] p-4 rounded-lg w-[calc(100% - 25rem)] ">
           <NewGraph />

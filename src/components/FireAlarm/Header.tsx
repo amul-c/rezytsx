@@ -1,34 +1,7 @@
-import { AppBar, Toolbar } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-const useStyles = makeStyles(() => ({
-  appBar: {
-    marginTop: "17px",
-    width: "calc(96% - 2rem)",
-    margin: "0 1rem",
-    marginLeft: "10px",
-    borderRadius: "10px",
-    height: "3rem",
-    marginBottom: "14px",
-    background:
-      "linear-gradient(182.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
-  },
-  heading: {
-    fontWeight: "400",
-    color: "white",
-    textAlign: "left",
-    position: "sticky",
-    top: "0",
-    zIndex: "999",
-  },
-}));
-
 function Header() {
-  const classes = useStyles();
-  const theme = useTheme();
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
 
   if (isSmallScreen) {
@@ -36,13 +9,26 @@ function Header() {
   }
 
   return (
-    <AppBar
-      position="static"
-      className={classes.appBar}
-      style={{ width: "98%" }}
+    <div
+      style={{
+        marginTop: "17px",
+     
+
+        marginLeft: "10px",
+        marginRight: "10px",
+        borderRadius: "10px",
+        height: "3rem",
+        marginBottom: "14px",
+        background:
+          "linear-gradient(182.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
+        position: "sticky",
+        top: "1rem",
+      
+      }}
     >
-      <Toolbar
+      <div
         style={{
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100%",
@@ -51,29 +37,26 @@ function Header() {
         <table style={{ width: "100%" }}>
           <thead>
             <tr style={{ justifyContent: "center" }}>
-              <th style={{ width: "200px" }} className={classes.heading}>
+              <th style={{ width: "200px", fontWeight: "400", color: "white", textAlign: "left" }}>
                 DEVICES
               </th>
-              <th style={{ width: "373px" }} className={classes.heading}>
+              <th style={{ width: "373px", fontWeight: "400", color: "white", textAlign: "left" }}>
                 PROPERTY
               </th>
-              <th style={{ width: "201px" }} className={classes.heading}>
+              <th style={{ width: "201px", fontWeight: "400", color: "white", textAlign: "left" }}>
                 INSTALLED DATE
               </th>
-              <th style={{ width: "358px" }} className={classes.heading}>
+              <th style={{ width: "358px", fontWeight: "400", color: "white", textAlign: "left" }}>
                 READINGS
               </th>
-              <th
-                style={{ width: "358px", textAlign: "right" }}
-                className={classes.heading}
-              >
+              <th style={{ width: "358px", textAlign: "right", fontWeight: "400", color: "white" }}>
                 STATUS
               </th>
             </tr>
           </thead>
         </table>
-      </Toolbar>
-    </AppBar>
+      </div>
+    </div>
   );
 }
 

@@ -19,10 +19,13 @@ import Building from './components/Buildings/Buildings';
 import BuildingMobile from './components/Buildings/BuildingMobile';
 import BuilNav from './components/Building/BuilNav';
 import FireAlarm from './components/FireAlarm/FireAlarm';
-import { URLParamsProvider } from './UrlParamsContext';
+import { useParams } from 'react-router-dom';
+
 function App() {
   const { isLargeScreen } = useSelector((state: RootState) => state.screenSize);
   const dispatch = useDispatch();
+  const  params = useParams();
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,29 +48,29 @@ function App() {
   return (
     <>
 
-<URLParamsProvider>
-      <BrowserRouter>
-        {isLargeScreen ? <Navbar /> : <MobileNavbar />}
+
+
         <Routes>
+    
           {isLargeScreen ? <Route path="/" element={<Home />} /> : <Route path="/" element={<MobileHome />} />}
-          {isLargeScreen ? <Route path="/unit/:unitId" element={<Unit />} /> : <Route path="/unit/:unitId" element={<MobileUnit />} />}
+          {isLargeScreen ? <Route path="/unit/:unitId" element={<Unit />} /> : <Route path="/homemoreinfo/unit/:unitId" element={<MobileUnit />} />}
           <Route path="/homemoreinfo" element={<HomeMoreInfo />} />
           <Route path="/unitmoreinfo" element={<UnitMoreInfo />} />
           {isLargeScreen ? <Route path="/tenant/:propertyId" element={<TenantList />} /> : <Route path="/homemoreinfo/tenant/:propertyId" element={<TenantMobile />} />}
           {isLargeScreen ? <Route path="/buildings/:propertyId" element={<Building />} /> : <Route path="homemoreinfo/buildings/:propertyId" element={<BuildingMobile />} />}
           {/* <Route path="/buildings/:propertyId" */}
-          
-          <Route path="/building/:buildingId" element={<BuilNav />} />
-          <Route path="/device/:deviceName/info/property/:propertyId" element={<FireAlarm />}></Route>
 
+{isLargeScreen ?  <Route path="/building/:buildingId" element={<BuilNav />} /> : <Route path="/homemoreinfo/building/:buildingId" element={<BuilNav />} />
+
+}
+          <Route path="/device/:deviceName/info/property/:propertyId" element={<FireAlarm />}></Route>
+          
 
 
         </Routes>
         {isLargeScreen ? "" : <MobileFooter />}
 
-      </BrowserRouter>
-      </URLParamsProvider>
-
+     
     </>
   );
 }

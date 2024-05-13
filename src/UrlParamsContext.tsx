@@ -1,19 +1,21 @@
-// URLParamsContext.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+
 const URLParamsContext = createContext();
 
-export const URLParamsProvider = ({ children }) => {
-  const [params, setParams] = useState({});
+const URLParamsProvider = ({ children }) => {
+  const [urlParams, setURLParams] = useState({});
 
-  const updateParams = (newParams) => {
-    setParams(newParams);
+  const updateURLParams = (newParams) => {
+    setURLParams(newParams);
   };
 
   return (
-    <URLParamsContext.Provider value={{ params, updateParams }}>
+    <URLParamsContext.Provider value={{ urlParams, updateURLParams }}>
       {children}
     </URLParamsContext.Provider>
   );
 };
 
-export const useURLParams = () => useContext(URLParamsContext);
+const useURLParams = () => useContext(URLParamsContext);
+
+export { URLParamsProvider, useURLParams };

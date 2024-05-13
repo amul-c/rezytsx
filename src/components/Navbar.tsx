@@ -18,8 +18,11 @@ import { useURLParams } from "../UrlParamsContext";
 export default function Navbar() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const location = useLocation();
-  const { propertyId } = useParams();
- 
+  const  params = useParams();
+
+
+
+  
   const [currentRoute, setCurrentRoute] = useState(location.pathname);
   const regex = /(\d+)/;
 const matches =currentRoute.match(regex)
@@ -37,10 +40,9 @@ if (matches) {
   
   }, [location.pathname])
 
-  useEffect(() => {
-  console.log(propertyId)
-  
-  }, [propertyId])
+
+
+ 
 
 
   useEffect(() => {
@@ -55,7 +57,7 @@ if (matches) {
   }, []);
 
   return (
-    <div className="bg-[rgba(216, 223, 234, 1)]">
+    <div className="bg-[rgba(216, 223, 234, 1)] fixed top-0 z-[999]">
       <AppBar position="fixed" sx={{ height: "fit-content",
           background: 'linear-gradient(231.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)'
           , fontFamily: "Roboto, Helvetica, Arial, sans-serif" }}>

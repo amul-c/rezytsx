@@ -11,11 +11,18 @@ import axios from "axios";
 import { useEffect ,useState} from "react";
 import { Link } from "react-router-dom"
 import { useParams } from "react-router-dom"
+import MobileNavbar from '../MobileNavbar';
+
+interface Building {
+  id: string;
+  name: string;
+  unitCount: number;
+  deviceCount: number;
+}
 
 const BuildingMobile = () => {
-  const { propertyId } = useParams();
-
-  const [data,setData] =useState([])
+  const { propertyId } = useParams<{ propertyId: string }>();
+  const [data, setData] = useState<Building[]>([]);
   async function getData(){
     const response= await axios.get(`http://localhost:8080/building/property/${propertyId}/list`)
     setData (response.data);
@@ -26,6 +33,7 @@ const BuildingMobile = () => {
   },[])
   return (
     <>
+    <MobileNavbar />
       <div className="bg-[#EDF1F7]  flex flex-col mb-4 mx-4 rounded-t-lg relative top-[6rem]">
         <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
           <div className="flex flex-row gap-1 order-1 items-center justify-center ">
@@ -48,7 +56,7 @@ const BuildingMobile = () => {
                
                 <tbody className="divide-y divide-gray-200">
                   {data.map((item, index) => (
-                    <Link to= {`/building/${item.id}`}> <tr key={index} className="bg-[white] flex flex-col p-1">
+                    <Link to= {`/homemoreinfo/building/${item.id}`}> <tr key={index} className="bg-[white] flex flex-col p-1">
                     <div className="flex flex-row justify-between items-center">   <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="order-1 rounded-l-xl px-6 py-4 whitespace-nowrap text-sm font-sm "><div className="flex flex-row items-center gap-1"><img className="h-4 w-4" src={th} alt="" /> <div>{item.name}</div></div></td>
                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm flex justify-end order-2 ">
  

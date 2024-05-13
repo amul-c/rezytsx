@@ -7,8 +7,20 @@ import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 import { useState,useEffect } from 'react'
 import axios from 'axios'
-const ActiveAlerts = ({propertyId}) => {
-const [data,setData]=useState([])
+
+
+interface Alert {
+  name: string;
+  buildingId: number;
+  unitId: number;
+}
+
+interface Props {
+  propertyId: string;
+}
+
+const ActiveAlerts = ({ propertyId }: Props) => {
+  const [data, setData] = useState<Alert[]>([]);
   async function getData() {
     try {
       const response = await axios.get(`http://localhost:8080/device/active-alert/property/${propertyId}`);
@@ -20,6 +32,8 @@ const [data,setData]=useState([])
   }
 
   useEffect(()=>{getData()},[])
+
+  
   const {isLargeScreen } = useSelector((state: RootState) => state.screenSize);
 
 

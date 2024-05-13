@@ -4,7 +4,6 @@ import batteryImg from "../../assets/images/Battery.png";
 import RedTempImg from "../../assets/images/image5.png";
 import TempImage from "../../assets/images/image3.png";
 import DropImage from "../../assets/images/image4.png";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -23,18 +22,22 @@ interface DeviceInfo {
   installedDate: number;
 }
 
-function Tables() {
-  const [data, setData] = useState<DeviceInfo[] | null>(null);
+function Tables({sortCategory,sortOrder}) {
+
+  const [buildingData, setBuildingData] = useState<any>([]);
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
-  const { propertyId, deviceName } = useParams<{ propertyId: string; deviceName: string }>();
+  const { propertyId, deviceName } = useParams<{
+    propertyId: string;
+    deviceName: string;
+  }>();
 
   useEffect(() => {
     async function fetchData() {
       try {
-       
-        const response = await axios.get(`http://localhost:8080/device/${deviceName}/info/property/${propertyId}`)
-        setData(response.data);
-    
+        const responseData = await axios.get(
+          `http://localhost:8080/device/${deviceName}/info/property/${propertyId}`
+        );
+        setBuildingData(responseData.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -43,13 +46,77 @@ function Tables() {
     fetchData();
   }, []);
 
-  if (!data) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    sortData();
+  }, [sortCategory, sortOrder]);
+
+  const getTemperature = (item: any) => {
+    return item.reading && item.reading.temperature
+      ? parseFloat(item.reading.temperature.replace("°C", ""))
+      : null;
+  };
+
+  const sortData = () => {
+    if (sortCategory && sortOrder) {
+      let sortedData = [...buildingData];
+      switch (sortCategory) {
+        case "id":
+          sortedData.sort((a, b) => {
+            return sortOrder === "Ascending" ? a.id - b.id : b.id - a.id;
+          });
+          break;
+        case "propertyName":
+          sortedData.sort((a, b) => {
+            return sortOrder === "Ascending"
+              ? a.propertyName.localeCompare(b.propertyName)
+              : b.propertyName.localeCompare(a.propertyName);
+          });
+          break;
+        case "installedDate":
+          sortedData.sort((a, b) => {
+            return sortOrder === "Ascending"
+              ? new Date(a.installedDate).getTime() -
+                  new Date(b.installedDate).getTime()
+              : new Date(b.installedDate).getTime() -
+                  new Date(a.installedDate).getTime();
+          });
+          break;
+        case "reading":
+          sortedData.sort((a, b) => {
+            const aTemperature = getTemperature(a);
+            const bTemperature = getTemperature(b);
+
+            if (aTemperature === null && bTemperature === null) return 0;
+            if (aTemperature === null)
+              return sortOrder === "Ascending" ? 1 : -1;
+            if (bTemperature === null)
+              return sortOrder === "Ascending" ? -1 : 1;
+
+            return sortOrder === "Ascending"
+              ? aTemperature - bTemperature
+              : bTemperature - aTemperature;
+          });
+          break;
+        case "connection":
+          sortedData.sort((a, b) => {
+            const aConnection = a.connection || "";
+            const bConnection = b.connection || "";
+            return sortOrder === "Ascending"
+              ? aConnection.localeCompare(bConnection)
+              : bConnection.localeCompare(aConnection);
+          });
+          break;
+        default:
+          break;
+      }
+      setBuildingData(sortedData);
+    }
+  };
 
   return (
     <div>
-      {data.map((item: DeviceInfo) => (
+       {
+       buildingData?.map((item: DeviceInfo) => (
         <div key={item.id}>
           {isSmallScreen ? (
             <div
@@ -63,7 +130,7 @@ function Tables() {
                 borderRadius: "5px",
                 backgroundColor: "white",
                 width: "92%",
-                maxWidth: "400px",
+              
               }}
             >
               <Typography
@@ -291,10 +358,7 @@ function Tables() {
               style={{
                 backgroundColor: "white",
                 marginBottom: "2rem",
-                marginLeft: "21px",
-                marginRight: "21px",
-                marginTop: "1rem",
-                width: "calc(99% - 1rem)",
+              
               }}
             >
               <AccordionSummary
@@ -308,6 +372,7 @@ function Tables() {
                   alignItems: "center",
                   width: "100%",
                   padding: "0 12px",
+                  borderRadius:'1rem'
                 }}
               >
                 <table style={{ width: "100%" }}>

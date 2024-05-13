@@ -4,6 +4,7 @@ import dust from "../../assets/delete.png"
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import { useParams } from "react-router-dom"
+import MobileNavbar from '../MobileNavbar';
 interface Customer {
   name: string;
   role: string;
@@ -31,7 +32,9 @@ const TenantMobile = () => {
 
 
   return (
-<>  <div id="container" className="relative top-[6rem] m-2">
+<> 
+<MobileNavbar />
+ <div id="container" className="relative top-[6rem] m-2">
         <header className="flex justify-between items-center bg-[white] p-2 rounded">
           <div className="order-1  flex flex-row gap-2 items-center text-[#01337C]">
             <img className="h-4 w-4" src={tenant} alt="" />

@@ -7,6 +7,7 @@
   import divide from "../../assets/break.png"
   import { useEffect, useState } from "react";
   import axios from 'axios';
+  import Navbar from "../Navbar"
 import { useParams } from "react-router-dom"
   const TenantList = () => {
 
@@ -15,6 +16,8 @@ import { useParams } from "react-router-dom"
   const [sortCategory, setSortCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const {propertyId}=useParams();
+  const [sorting,setSorting]=useState(false);
+
     interface Header {
       name: string;
     }
@@ -48,6 +51,14 @@ import { useParams } from "react-router-dom"
         console.error("Error deleting data:", error.message);
       }
     };
+    function handleSorting(){
+      setSorting(false);
+  
+    }
+
+    useEffect(() => {
+      getData();
+    }, [sorting]);
     useEffect(()=>{getData()},[])
 
     function SortData() {
@@ -93,6 +104,8 @@ import { useParams } from "react-router-dom"
         setData(sortedData);
       }
       setShowSortModal(false);
+      setSorting(true);
+      
     }
      
   
@@ -100,7 +113,7 @@ import { useParams } from "react-router-dom"
 
     return (
       <>
-
+      <Navbar />
         <div className="bg-[#EDF1F7]  flex flex-col mb-4 mx-4 rounded-t-lg relative top-[6rem]">
           <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
             <div className="flex flex-row gap-1 order-1 items-ceter justify-center">
@@ -109,6 +122,10 @@ import { useParams } from "react-router-dom"
             </div>
 
             <div className='flex flex-row gap-1 order-2'>
+            {sorting 
+            &&
+            <button onClick={handleSorting}className='text-red-600 mr-2'>clear sorting</button>
+          }
               <button onClick={()=>{setShowSortModal(!showSortModal)}}id="sortBy " className="flex flex-row items-center gap-2 justify-center bg-[#C0D9FF] p-1 rounded items-center justify-center">
                 <div className="bg-[#C0D9FF]" >SORT BY</div>
                 <img className="h-6 w-6 " id="filter" src={bluefilter} alt="" />

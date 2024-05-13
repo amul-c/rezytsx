@@ -1,34 +1,8 @@
 import { AppBar, Toolbar } from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { useTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-const useStyles = makeStyles(() => ({
-  appBar: {
-    marginTop: "17px",
-    width: "calc(96% - 2rem)",
-    margin: "0 1rem",
-    marginLeft: "10px",
-    borderRadius: "10px",
-    height: "3rem",
-    marginBottom: "14px",
-    background:
-      "linear-gradient(182.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
-  },
-  heading: {
-    fontWeight: "400",
-    color: "white",
-    textAlign: "left",
-    position: "sticky",
-    top: "0",
-    zIndex: "999",
-  },
-}));
-
-function Header() {
-  const classes = useStyles();
-  const theme = useTheme();
+function BuilHeader() {
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
 
   if (isSmallScreen) {
@@ -38,28 +12,91 @@ function Header() {
   return (
     <AppBar
       position="static"
-      className={classes.appBar}
-      style={{ width: "98%" }}
+      style={{
+        width: "98%",
+        marginTop: "17px",
+        margin: "0 1rem",
+        marginLeft: "10px",
+        borderRadius: "10px",
+        height: "3rem",
+        marginBottom: "14px",
+        background:
+          "linear-gradient(182.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
+      }}
     >
-      <Toolbar style={{ alignItems: "center",
+      <Toolbar
+        style={{
+          alignItems: "center",
           justifyContent: "center",
-          minHeight: "100%", }}>
+          minHeight: "100%",
+        }}
+      >
         <table style={{ width: "100%" }}>
           <thead>
-            <tr style={{justifyContent: "center"}}>
-              <th style={{  width: "106px" }} className={classes.heading}>
+            <tr style={{ justifyContent: "center" }}>
+              <th
+                style={{
+                  width: "200px",
+                  fontWeight: "400",
+                  color: "white",
+                  textAlign: "left",
+                  position: "sticky",
+                  top: "0",
+                  zIndex: "999",
+                }}
+              >
                 UNIT
               </th>
-              <th style={{  width: "170px" }} className={classes.heading}>
+              <th
+                style={{
+                  width: "445px",
+                  fontWeight: "400",
+                  color: "white",
+                  textAlign: "left",
+                  position: "sticky",
+                  top: "0",
+                  zIndex: "999",
+                }}
+              >
                 DEVICES
               </th>
-              <th style={{  width: "201px" }} className={classes.heading}>
+              <th
+                style={{
+                  width: "201px",
+                  fontWeight: "400",
+                  color: "white",
+                  textAlign: "left",
+                  position: "sticky",
+                  top: "0",
+                  zIndex: "999",
+                }}
+              >
                 INSTALLED DATE
               </th>
-              <th style={{  width: "113px" }} className={classes.heading}>
+              <th
+                style={{
+                  width: "322px",
+                  fontWeight: "400",
+                  color: "white",
+                  textAlign: "left",
+                  position: "sticky",
+                  top: "0",
+                  zIndex: "999",
+                }}
+              >
                 READINGS
               </th>
-              <th style={{width: "281px", textAlign: "right" }} className={classes.heading}>
+              <th
+                style={{
+                  width: "322px",
+                  textAlign: "right",
+                  fontWeight: "400",
+                  color: "white",
+                  position: "sticky",
+                  top: "0",
+                  zIndex: "999",
+                }}
+              >
                 TENANT NAME
               </th>
             </tr>
@@ -70,4 +107,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default BuilHeader;

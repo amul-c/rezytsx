@@ -2,6 +2,7 @@ import InstalledDevicesUnitWise from "./InstalledDevicesUnitwise";
 import UnitInfo from "./UnitInfo"
 import axios from "axios";
 import { useState,useEffect } from "react";
+import MobileNavbar from '../MobileNavbar';
 const UnitMoreInfo = () => {
   const [unitData,setUnitData]=useState([]);
 
@@ -16,6 +17,7 @@ const UnitMoreInfo = () => {
 
   return (
    <>
+   <MobileNavbar />
    <div className="bg-[#EDF1F7] w-(100%]  h-[fit-content] my-4  rounded-md relative top-[3rem] pb-[4rem] h-[100vh] " id="sensors">
 
    <UnitInfo unitData={unitData} />

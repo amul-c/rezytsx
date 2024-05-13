@@ -4,11 +4,12 @@ import UnitInfo from './UnitInfo';
 import Sensors from './Sensors';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Navbar from '../Navbar';
 import axios from 'axios';
 const Unit = () => {
   const [unitData,setUnitData]=useState([]);
   const { unitId } = useParams();
-
+ const params=useParams();
   async function getUnitData(){
    
     
@@ -24,6 +25,7 @@ const Unit = () => {
 
   return (
  <>
+ <Navbar />
  <div className='flex flex-row bg-[#D8DFEA] gap-3 relative top-[5rem]'>
  <div className="bg-[#EDF1F7] w-[calc(100%-25rem)]  h-[fit-content] my-4 ml-4 rounded-md" id="sensors">
      <Sensors unitData={unitData} />
