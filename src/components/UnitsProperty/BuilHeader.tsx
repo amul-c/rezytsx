@@ -2,7 +2,7 @@ import { AppBar, Toolbar } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
-function BuilHeader() {
+function UnitHeader() {
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
 
   if (isSmallScreen) {
@@ -10,63 +10,16 @@ function BuilHeader() {
   }
 
   return (
-    <AppBar 
-    className="mx-2 w-[98%]"
+    <AppBar
       position="static"
       style={{
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-       
-
-
+        width: "98%",
+        marginTop: "17px",
+        margin: "0 1rem",
+        marginLeft: "10px",
         borderRadius: "10px",
         height: "3rem",
-       
+        marginBottom: "14px",
         background:"linear-gradient(182.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
       }}
     >
@@ -153,4 +106,4 @@ function BuilHeader() {
   );
 }
 
-export default BuilHeader;
+export default UnitHeader;

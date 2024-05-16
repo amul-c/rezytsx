@@ -6,10 +6,12 @@ import tempsensor from "../../assets/tempsensor.png"
 import watermeters from "../../assets/watermeters.png"
 import arrow from "../../assets/arrow.png"
 import thumbnail from "../../assets/thumbnail.png"
-
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store'
 const PropertyInfo = ({ propertyId }) => {
   const [propertyData, setPropertyData] = useState(null);
   const location = useLocation();
+  const { isLargeScreen } = useSelector((state: RootState) => state.screenSize);
 
   useEffect(() => {
     fetch(`http://localhost:8080/property/${propertyId}`)
@@ -57,8 +59,17 @@ const PropertyInfo = ({ propertyId }) => {
                       </div>
                     </Link>
                   )}
-                  {item.device_type === 'Number of Units' && (
-                    <Link to={`building/${propertyId}`}>
+                  {item.device_type === 'Number of Units' && !isLargeScreen && (
+                    <Link to={`/homemoreinfo/propertyUnits/${propertyId}`}>
+                      <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+                        <img className="h-6 w-6 inline-block align-middle" style={{ marginRight: '8px' }} src={iconMapping[item.icon]} alt="" />
+                        <div className="inline-block align-middle">{item.device_type}</div>
+                      </div>
+                    </Link>
+                  )}
+
+{item.device_type === 'Number of Units' && isLargeScreen && (
+                    <Link to={`/propertyUnits/${propertyId}`}>
                       <div style={{ display: 'inline-block', verticalAlign: 'middle' }}>
                         <img className="h-6 w-6 inline-block align-middle" style={{ marginRight: '8px' }} src={iconMapping[item.icon]} alt="" />
                         <div className="inline-block align-middle">{item.device_type}</div>

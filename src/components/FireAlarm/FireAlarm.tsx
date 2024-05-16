@@ -19,6 +19,8 @@ import Navbar from "../Navbar.tsx";
 import MobileNavbar from "../MobileNavbar.tsx";
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+
 const FireAlarm = () => {
   const [showSortModal, setShowSortModal] = useState(false);
   const [data, setData] = useState<FireData[]>([]);
@@ -41,7 +43,7 @@ const FireAlarm = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get<FireData[]>(
-        `http://localhost:8080/device/Fire Alarm/info/property/${propertyId}`
+        `http://localhost:8080/device/${deviceName}/info/property/${propertyId}`
       );
       setData(response.data);
     } catch (error: any) {
@@ -51,9 +53,12 @@ const FireAlarm = () => {
 
   function handleSorting(){
     setSorting(false);
+    fetchData()
 
   }
 
+
+  const navigate = useNavigate();
   const sortData = () => {
     if (sortCategory && sortOrder) {
       let sortedData = [...data];
@@ -123,16 +128,18 @@ const FireAlarm = () => {
     <>
      {isLargeScreen ?  <Navbar /> :
     <MobileNavbar />}
-   <div className="relative top-[5rem]">
-   <AppBar position="static" style={{ backgroundColor: "white", borderRadius: "0.7rem", width: "99%",  boxShadow: "none" }}>
+   <div className="relative top-[5rem] flex gap-[1rem] flex-col mx-[1rem]">
+   <AppBar position="static" style={{ backgroundColor: "white", borderRadius: "0.7rem", width: "100%",  boxShadow: "none" }}>
         <Toolbar style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: "1rem", paddingRight: "1rem" }}>
           <div style={{ display: "flex", alignItems: "center", color: "black" }}>
-            <svg style={{ color: "darkblue", marginRight: "10px" }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+          <button onClick={() => navigate(-1)}>
+          <svg style={{ color: "darkblue", marginRight: "10px" }} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
+          </button>
             <img src={FireImage} alt="Your Image" style={{ width: 25, height: "auto", color: "black" }} />
             <Typography variant="h6" style={{ whiteSpace: "nowrap" }}>
-              Fire Alarms
+              {deviceName}
             </Typography>
           </div>
           <div style={{ display: "flex", alignItems: "center", color: "black" }}>
@@ -203,11 +210,11 @@ const FireAlarm = () => {
         </div>
       )}
 
-      <div style={{ backgroundColor: isSmallScreen ? "" : "#EDF1F7", marginLeft: "1.5rem", marginRight: "1.5rem", overflow: "hidden", height: "100%", }}>
+      <div style={{ backgroundColor: isSmallScreen ? "" : "#EDF1F7", overflow: "hidden", height: "100%", }}>
         <Header />
-        <div style={{  minHeight: "calc(100vh - 4rem)", display: "flex", justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap", backgroundColor: "#EDF1F7" }}>
-          <div style={{  borderRadius: "0.5rem",width:'98%' }}>
-          <Tables sortCategory={sortCategory} sortOrder={sortOrder} />
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap", backgroundColor: "#EDF1F7" }}>
+        <div className={`mx-6  ${isSmallScreen && 'my-6' }`} style={{ borderRadius: "0.5rem", width: '98%' }}>     
+             <Tables sortCategory={sortCategory} sortOrder={sortOrder} data={data} setData={setData}/>
           </div>
         </div>
       </div>

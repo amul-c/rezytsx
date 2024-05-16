@@ -14,6 +14,7 @@ import back from '../../assets/back.png';
 import Navbar from '../Navbar';
 import { RootState } from '../../store';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 interface Building {
   id: string;
@@ -30,6 +31,7 @@ const Building = () => {
   const [sortOrder, setSortOrder] = useState('');
   const { propertyId } = useParams<{ propertyId: string }>();
   const [sorting,setSorting]=useState(false);
+  const navigate = useNavigate();
 
   async function getData() {
     try {
@@ -42,12 +44,12 @@ const Building = () => {
 
   function handleSorting(){
     setSorting(false);
-
+   getData()
   }
 
   useEffect(() => {
     getData();
-  }, [sorting]);
+  }, []);
 
   function SortData() {
     if (sortCategory && sortOrder) {
@@ -64,12 +66,25 @@ const Building = () => {
           });
           break;
         case 'units':
+          sortedData.sort((a, b) => {
+            const unitA = parseInt(a.unitCount, 10);
+            const unitB = parseInt(b.unitCount, 10);
+            if (sortOrder === 'Ascending') {
+              return unitA - unitB;
+            } else if (sortOrder === 'Descending') {
+              return unitB - unitA;
+            }
+            return 0;
+          });
+          break;
         case 'devices':
           sortedData.sort((a, b) => {
+            const deviceA = parseInt(a.deviceCount, 10);
+            const deviceB = parseInt(b.deviceCount, 10);
             if (sortOrder === 'Ascending') {
-              return a[sortCategory] - b[sortCategory];
+              return deviceA - deviceB;
             } else if (sortOrder === 'Descending') {
-              return b[sortCategory] - a[sortCategory];
+              return deviceB - deviceA;
             }
             return 0;
           });
@@ -82,6 +97,7 @@ const Building = () => {
     setShowSortModal(false);
     setSorting(true);
   }
+  
 
   return (
     <>
@@ -89,7 +105,11 @@ const Building = () => {
       <div className="bg-[#EDF1F7]  flex flex-col mb-4 mx-4 rounded-t-lg relative top-[6rem]">
         <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
           <div className="flex flex-row gap-1 order-1 items-center justify-center ">
-            <img className="h-4 w-4" src={back} alt="" />
+            <button onClick={() => navigate(-1)}>
+            <img  className="h-6 w-6" src={back} alt="" />
+           
+
+            </button>
             <img src={building} alt="" className="h-6 w-6" />
             <div className="text-[#01337C]">Property Name</div>
           </div>
@@ -110,10 +130,10 @@ const Building = () => {
           <>
             <div className="lg:w-[100%]  2xl:w-[100%] sm:w-full xs:w-full rounded-lg w-[100%] flex justify-center">
               <table className="w-[98%] divide  -y divide-gray-200 border-separate border-spacing-y-3 md:m-4 lg:m-4 m-[10px] ">
-                <tbody className="divide-y divide-gray-200">
+                <tbody className="divide-y divide-gray-200 flex flex-col gap-[19px]">
                   {data.map((item, index) => (
                     <Link
-                      to={isLargeScreen ? `/building/${item.id}` : `/homemoreinfo/building/${item.id}`}
+                      to={isLargeScreen ? `/building/${item.id}` : `/homemoreinfo/building/${item.name}/${item.id}`}
                       className="bg-[white] block"
                       key={index}
                     >

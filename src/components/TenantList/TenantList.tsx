@@ -53,24 +53,27 @@ import { useParams } from "react-router-dom"
     };
     function handleSorting(){
       setSorting(false);
+      getData()
   
     }
 
     useEffect(() => {
       getData();
-    }, [sorting]);
+    }, []);
     useEffect(()=>{getData()},[])
 
     function SortData() {
       if (sortCategory && sortOrder) {
         let sortedData = [...data];
         switch (sortCategory) {
-          case "Name":
+          case "name": // Change to lowercase "name"
             sortedData.sort((a, b) => {
+              const nameA = a.name.toLowerCase(); // Convert names to lowercase
+              const nameB = b.name.toLowerCase();
               if (sortOrder === "Ascending") {
-                return a.name.localeCompare(b.name);
+                return nameA.localeCompare(nameB);
               } else if (sortOrder === "Descending") {
-                return b.name.localeCompare(a.name);
+                return nameB.localeCompare(nameA);
               }
               return 0;
             });
@@ -90,12 +93,14 @@ import { useParams } from "react-router-dom"
           case "propertyName":
           case "unitName":
             sortedData.sort((a, b) => {
-              if (sortOrder === "Ascending") {
-                return a[sortCategory] - b[sortCategory];
-              } else if (sortOrder === "Descending") {
-                return b[sortCategory] - a[sortCategory];
-              }
-              return 0;
+              const unitA = parseInt(a.unitCount, 10);
+            const unitB = parseInt(b.unitCount, 10);
+            if (sortOrder === 'Ascending') {
+              return unitA - unitB;
+            } else if (sortOrder === 'Descending') {
+              return unitB - unitA;
+            }
+            return 0;
             });
             break;
           default:
@@ -105,8 +110,8 @@ import { useParams } from "react-router-dom"
       }
       setShowSortModal(false);
       setSorting(true);
-      
     }
+    
      
   
 

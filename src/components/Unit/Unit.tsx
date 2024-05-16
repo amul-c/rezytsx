@@ -8,8 +8,8 @@ import Navbar from '../Navbar';
 import axios from 'axios';
 const Unit = () => {
   const [unitData,setUnitData]=useState([]);
-  const { unitId } = useParams();
- const params=useParams();
+  const { unitId ,buildingId} = useParams();
+
   async function getUnitData(){
    
     
