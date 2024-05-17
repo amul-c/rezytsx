@@ -5,7 +5,6 @@ import RedTempImg from "../../assets/images/image5.png";
 import TempImage from "../../assets/images/image3.png";
 import DropImage from "../../assets/images/image4.png";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 
@@ -22,43 +21,30 @@ interface DeviceInfo {
   installedDate: number;
 }
 
-function Tables({sortCategory,sortOrder}) {
+function Tables({sortCategory,sortOrder,data,setData}) {
 
-  const [buildingData, setBuildingData] = useState<any>([]);
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
   const { propertyId, deviceName } = useParams<{
     propertyId: string;
     deviceName: string;
+
   }>();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const responseData = await axios.get(
-          `http://localhost:8080/device/${deviceName}/info/property/${propertyId}`
-        );
-        setBuildingData(responseData.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
 
-    fetchData();
-  }, []);
 
   useEffect(() => {
     sortData();
   }, [sortCategory, sortOrder]);
 
   const getTemperature = (item: any) => {
-    return item.reading && item.reading.temperature
-      ? parseFloat(item.reading.temperature.replace("°C", ""))
+    return item.reading && item?.reading?.temperature?
+       parseFloat(item?.reading?.temperature?.replace("°C", ""))
       : null;
   };
 
   const sortData = () => {
     if (sortCategory && sortOrder) {
-      let sortedData = [...buildingData];
+      let sortedData = [...data];
       switch (sortCategory) {
         case "id":
           sortedData.sort((a, b) => {
@@ -109,21 +95,21 @@ function Tables({sortCategory,sortOrder}) {
         default:
           break;
       }
-      setBuildingData(sortedData);
+      setData(sortedData);
     }
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-[2rem]">
        {
-       buildingData?.map((item: DeviceInfo) => (
-        <div key={item.id}>
+       data?.map((item: DeviceInfo) => (
+        <div style={isSmallScreen ? { alignItems: 'center' } : {} }className="flex flex-col justify-center" key={item.id}>
           {isSmallScreen ? (
             <div
               style={{
-                marginTop: "1.5rem",
-                marginRight: "-3rem",
-                marginLeft: "1.5rem",
+             
+              
+           
                 display: "flex",
                 flexDirection: "column",
                 padding: "2rem",
@@ -147,7 +133,6 @@ function Tables({sortCategory,sortOrder}) {
               <div
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
                   marginBottom: "0.5rem",
                 }}
               >
@@ -182,7 +167,7 @@ function Tables({sortCategory,sortOrder}) {
               <Typography
                 style={{
                   height: "40px",
-                  width: "314px",
+                  maxWidth: "314px",
                   marginLeft: "-1rem",
                   borderRadius: "4px",
                   padding: "8px",
@@ -192,7 +177,7 @@ function Tables({sortCategory,sortOrder}) {
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center" }}>
-                  {parseInt(item.reading.temperature.split(":")[1]) <= 25 ? (
+                  {parseInt(item?.reading?.temperature?.split(":")[1]) <= 25 ? (
                     <img
                       src={RedTempImg}
                       alt="Temperature"
@@ -232,15 +217,15 @@ function Tables({sortCategory,sortOrder}) {
                           style={{
                             color:
                               parseFloat(
-                                item.reading.temperature.split(":")[1]
+                                item?.reading?.temperature?.split(":")[1]
                               ) >= 2
                                 ? "#00C17B"
                                 : "red",
                           }}
                         >
-                          {item.reading.temperature.split(":")[0]}{" "}
+                          {item?.reading?.temperature?.split(":")[0]}{" "}
                         </span>
-                        <span>{item.reading.temperature.split(":")[1]}</span>
+                        <span>{item?.reading?.temperature?.split(":")[1]}</span>
                       </Typography>
                     </div>
                   </div>
@@ -249,7 +234,7 @@ function Tables({sortCategory,sortOrder}) {
               <Typography
                 style={{
                   height: "40px",
-                  width: "314px",
+                  maxWidth: "314px",
                   marginLeft: "-1rem",
                   borderRadius: "4px",
                   padding: "8px",
@@ -294,7 +279,7 @@ function Tables({sortCategory,sortOrder}) {
                   padding: "0.5rem",
                   fontWeight: "400",
                   display: "flex",
-                  justifyContent: "space-between",
+          
                   width: "100%",
                 }}
               >
@@ -357,7 +342,7 @@ function Tables({sortCategory,sortOrder}) {
             <Accordion
               style={{
                 backgroundColor: "white",
-                marginBottom: "2rem",
+            
               
               }}
             >
@@ -365,10 +350,10 @@ function Tables({sortCategory,sortOrder}) {
                 id="myc"
                 style={{
                   height: "72px",
-                  marginTop: "1.5rem",
+               
                   backgroundColor: "white",
                   display: "flex",
-                  justifyContent: "space-between",
+                
                   alignItems: "center",
                   width: "100%",
                   padding: "0 12px",
@@ -376,9 +361,10 @@ function Tables({sortCategory,sortOrder}) {
                 }}
               >
                 <table style={{ width: "100%" }}>
+                  
                   <tbody>
                     <tr>
-                      <th
+                      <td
                         style={{
                           // padding: "0.5rem",
                           fontWeight: "400",
@@ -388,8 +374,8 @@ function Tables({sortCategory,sortOrder}) {
                         }}
                       >
                         {item.id}
-                      </th>
-                      <th
+                      </td>
+                      <td
                         style={{
                           fontWeight: "400",
                           textAlign: "left",
@@ -397,9 +383,9 @@ function Tables({sortCategory,sortOrder}) {
                         }}
                       >
                         {item.propertyName}
-                      </th>
+                      </td>
 
-                      <th
+                      <td
                         style={{
                           fontWeight: "400",
                           textAlign: "left",
@@ -407,9 +393,9 @@ function Tables({sortCategory,sortOrder}) {
                         }}
                       >
                         {new Date(item.installedDate).toLocaleDateString()}
-                      </th>
+                      </td>
 
-                      <th
+                      <td
                         style={{
                           textAlign: "left",
                           width: "358px",
@@ -425,7 +411,7 @@ function Tables({sortCategory,sortOrder}) {
                             style={{
                               backgroundColor:
                                 parseFloat(
-                                  item.reading.temperature.split(":")[1]
+                                  item?.reading?.temperature?.split(":")[1]
                                 ) <= 25.2
                                   ? "#f0f0f0"
                                   : "#f0f0f0",
@@ -440,7 +426,7 @@ function Tables({sortCategory,sortOrder}) {
                             <img
                               src={
                                 parseInt(
-                                  item.reading.temperature.split(":")[1]
+                                  item?.reading?.temperature?.split(":")[1]
                                 ) <= 25
                                   ? RedTempImg
                                   : TempImage
@@ -458,13 +444,13 @@ function Tables({sortCategory,sortOrder}) {
                                 style={{
                                   color:
                                     parseFloat(
-                                      item.reading.temperature.split(":")[1]
+                                      item?.reading?.temperature?.split(":")[1]
                                     ) <= 25.2
                                       ? "red"
                                       : "#00C17B",
                                 }}
                               >
-                                {item.reading.temperature.split(":")[0]}
+                                {item?.reading?.temperature?.split(":")[0]}
                               </span>
                             </Typography>
                           </div>
@@ -493,9 +479,9 @@ function Tables({sortCategory,sortOrder}) {
                             </Typography>
                           </div>
                         </div>
-                      </th>
+                      </td>
 
-                      <th
+                      <td
                         style={{
                           textAlign: "left",
                           width: "358px",
@@ -557,7 +543,7 @@ function Tables({sortCategory,sortOrder}) {
                             <Typography>{item.connection}</Typography>
                           </div>
                         </div>
-                      </th>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

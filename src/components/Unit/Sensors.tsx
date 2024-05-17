@@ -14,17 +14,22 @@ import back from "../../assets/back.png"
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 const Sensors = ({unitData}) => {
+    const navigate = useNavigate();
 const {unitId}=useParams();
     const {isLargeScreen } = useSelector((state: RootState) => state.screenSize);
 
-    const sensormapping={
-        temperature:high,
-        humidity:humidity
-    }
+    const sensormapping = {
+        temperature: high,
+        humidity: humidity,
+        default: thumbnail 
+    };
+
     return (
         <>
-      {isLargeScreen && <div className='flex flex-row items-center gap-2'> <button><img src={back} className='h-6 w-6' alt="" /></button>
+      {isLargeScreen && <div className='flex flex-row items-center gap-2'> <button onClick={() => navigate(-1)}  ><img src={back} className='h-6 w-6' alt="" /></button>
       <div className=''>  Unit {unitId}</div></div>}
 
         <ul className='gap-[2rem] flex flex-col p-4'>
@@ -36,7 +41,7 @@ const {unitId}=useParams();
             <div className={`flex justify-between ${isLargeScreen ? 'flex-row' : 'flex-col gap-2 '}`}   >   
             <div className='order-1'>
                  <div className='flex flex-row gap-2'>
-                    {parseInt(item.reading.temperature.split("°")[0]) >=40 || parseInt(item.reading.humidity.split("%")[0])>=40 ?
+                    {parseInt(item?.reading?.temperature?.split("°")[0]) >=40 || parseInt(item?.reading?.humidity?.split("%")[0])>=40 ?
                     <img src={danger} className='h-6 w-6' alt="" />
                     :
                     <img src={right} className='h-6 w-6' alt="" />
@@ -82,7 +87,7 @@ const {unitId}=useParams();
             <div className={`order-1 flex gap-4 ${isLargeScreen ? 'flex-row' : 'flex-col '}`}>
     {Object.keys(item.reading).map((key, idx) => (
         <div key={idx} className='h-[2.4rem] flex flex-row gap-2 p-2 items-center justify-center h-[2.2rem] text-[red] rounded-md max-h-[2.4rem] w-[fit-content] w-[fit-content]' style={{ backgroundColor: key === 'temperature' ? 'rgba(255, 87, 77, 0.24)' : '#EDF1F7', color: key === 'temperature' ? 'red' : 'black' }}>
-            <img className="h-6 w-6" src={sensormapping[key]} alt="" />
+     <img className="h-6 w-6" src={sensormapping[key] || sensormapping.default} alt="" />
             <div>{key}</div>
             <div>{item.reading[key]}</div>
         </div>

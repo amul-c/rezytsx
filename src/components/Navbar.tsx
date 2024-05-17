@@ -62,7 +62,6 @@ if (matches) {
           background: 'linear-gradient(231.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)'
           , fontFamily: "Roboto, Helvetica, Arial, sans-serif" }}>
         <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="open drawer" sx={{ mr: 2 }}></IconButton>
           <Box sx={{ display: "flex", alignItems: "center",  height: '100%' }}>
             <img src={PropertyImage} alt="icon" style={{ height: "20px", width: "20px", marginRight: "5px" }} />
             <div color="lightgray" style={{ fontWeight: 500 }}>Properties</div>
@@ -72,19 +71,19 @@ if (matches) {
 
         <Typography color="white" sx={{ mx: 0.5 }}>&gt;</Typography>
             {
-              currentRoute ==`/buildings/${id}` &&
+              currentRoute ==`/buildings/${params.propertyId}` &&
           
                <>
               <div color="lightgray" style={{ fontWeight: 500 }}>Buildings</div></>
               
             }
              {
-              currentRoute ==`/unit/${id}` &&
+              currentRoute ==`/unit/${params.buildingId}/${params.unitId}` &&
           
                <>
-              <div color="lightgray" style={{ fontWeight: 500 }}>Building {id}</div>
+              <div color="lightgray" style={{ fontWeight: 500 }}>Building {params.buildingId}</div>
               <Typography color="white" sx={{ mx: 0.5 }}>&gt;</Typography>
-              <div color="lightgray" style={{ fontWeight: 500 }}>Unit {id}</div>
+              <div color="lightgray" style={{ fontWeight: 500 }}>Unit {params.unitId}</div>
 
               </>
               

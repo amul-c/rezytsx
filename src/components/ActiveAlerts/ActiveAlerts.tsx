@@ -53,10 +53,11 @@ const ActiveAlerts = ({ propertyId }: Props) => {
           backgroundColor = '#FFEFD7';
         }
 
+      
         return (
           <li key={alert.name} className={`w-[100%] h-[3rem] mt-2 items-center flex rounded justify-between`} style={{ backgroundColor }}>
             <div className='flex flex-row gap-2 ml-2 order-1'>
-            <img className="h-6 w-6" src={alert.name === 'Fire Alarm' ? fire : alert.name === 'Leak' ? drop : ''} alt="" />
+            <img className="h-6 w-6" src={alert.name === 'Fire Alarm' ? fire : alert.name === 'Leak' ? drop :alert.name === 'Humidity' ? drop: ''} alt="" />
 
             <div style={{ color: alert.name === 'Fire Alarm' ? '#F05348' : alert.name === 'Leak' ? '#FF9900' : 'black' }}>
                 {alert.name}</div>

@@ -1,12 +1,10 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {  Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import Unit from './components/Unit/Unit';
-import Navbar from './components/Navbar';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSmallScreen, setLargeScreen } from './components/Slices/ScreenSizeSlice';
 import { RootState } from './store';
-import MobileNavbar from './components/MobileNavbar';
 import MobileUnit from './components/Unit/MobileUnit';
 import { useEffect } from 'react';
 import MobileFooter from './components/MobileFooter';
@@ -20,6 +18,7 @@ import BuildingMobile from './components/Buildings/BuildingMobile';
 import BuilNav from './components/Building/BuilNav';
 import FireAlarm from './components/FireAlarm/FireAlarm';
 import { useParams } from 'react-router-dom';
+import UnitsProperty from './components/UnitsProperty/UnitsProperty';
 
 function App() {
   const { isLargeScreen } = useSelector((state: RootState) => state.screenSize);
@@ -53,20 +52,22 @@ function App() {
         <Routes>
     
           {isLargeScreen ? <Route path="/" element={<Home />} /> : <Route path="/" element={<MobileHome />} />}
-          {isLargeScreen ? <Route path="/unit/:unitId" element={<Unit />} /> : <Route path="/homemoreinfo/unit/:unitId" element={<MobileUnit />} />}
+          {isLargeScreen ? 
+          <Route path="/unit/:buildingId/:unitId" element={<Unit />} />
+           : <Route path="/homemoreinfo/unit/:unitId" element={<MobileUnit />} />}
           <Route path="/homemoreinfo" element={<HomeMoreInfo />} />
           <Route path="/unitmoreinfo" element={<UnitMoreInfo />} />
           {isLargeScreen ? <Route path="/tenant/:propertyId" element={<TenantList />} /> : <Route path="/homemoreinfo/tenant/:propertyId" element={<TenantMobile />} />}
           {isLargeScreen ? <Route path="/buildings/:propertyId" element={<Building />} /> : <Route path="homemoreinfo/buildings/:propertyId" element={<BuildingMobile />} />}
           {/* <Route path="/buildings/:propertyId" */}
 
-{isLargeScreen ?  <Route path="/building/:buildingId" element={<BuilNav />} /> : <Route path="/homemoreinfo/building/:buildingId" element={<BuilNav />} />
+{isLargeScreen ?  <Route path="/building/:buildingId" element={<BuilNav />} /> : <Route path="/homemoreinfo/building/:buildingName/:buildingId" element={<BuilNav />} />
 
 }
+
+{isLargeScreen ?  <Route path="/propertyUnits/:propertyId" element={<UnitsProperty />} /> : <Route path="/homemoreinfo/propertyUnits/:propertyId" element={<UnitsProperty />} />
+}
           <Route path="/device/:deviceName/info/property/:propertyId" element={<FireAlarm />}></Route>
-          
-
-
         </Routes>
         {isLargeScreen ? "" : <MobileFooter />}
 

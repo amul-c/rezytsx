@@ -1,135 +1,135 @@
 import {
-  Typography,
-  Button,
-  AppBar,
-  Toolbar,
-  Badge,
-  IconButton,
-} from "@mui/material";
-import { Sort } from "@mui/icons-material";
-import BuilImg from "../../assets/images/bluebuil.png";
-import BuilHeader from "./BuilHeader";
-import BuilTables from "./BuilTables";
-import FilterIcon from "../../assets/images/filterIcon.png";
-import PropertyImg from "../../assets/images/bluebuil.png";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store.ts";
-import { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import MobileNavbar from "../MobileNavbar";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
-
-interface UnitData {
-  id: number;
-  name: string;
-  installedDate: string;
-  reading: {
-    temperature: string;
-  };
-  tenantName: string;
-}
-function BuilNav() {
-  const { isSmallScreen, isLargeScreen } = useSelector(
-    (state: RootState) => state.screenSize
-  );
-  const [data, setData] = useState<UnitData[]>([]);
-  const [showSortModal, setShowSortModal] = useState(false);
-  const [sortCategory, setSortCategory] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
-  const {buildingId} = useParams();
-  const [sorting,setSorting]=useState(false);
-  const navigate = useNavigate();
-
-  async function fetchData() {
-    try {
-      const response = await axios.get(`http://localhost:8080/unit/building/${buildingId}/list`);
-      setData(response.data);
-    
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    Typography,
+    Button,
+    AppBar,
+    Toolbar,
+    Badge,
+    IconButton,
+  } from "@mui/material";
+  import { Sort } from "@mui/icons-material";
+  import BuilImg from "../../assets/images/bluebuil.png";
+  import FilterIcon from "../../assets/images/filterIcon.png";
+  import PropertyImg from "../../assets/images/bluebuil.png";
+  import { useSelector } from "react-redux";
+  import { RootState } from "../../store.ts";
+  import { useState, useEffect } from "react";
+  import Navbar from "../Navbar";
+  import MobileNavbar from "../MobileNavbar";
+  import axios from "axios";
+  import { useParams } from "react-router-dom";
+  import { useNavigate } from 'react-router-dom';
+import UnitTables from "./BuilTables.tsx";
+import UnitHeader from "./BuilHeader.tsx";
+  
+  interface UnitData {
+    id: number;
+    name: string;
+    installedDate: string;
+    reading: {
+      temperature: string;
+    };
+    tenantName: string;
   }
-  useEffect(() => {
-   
-    fetchData();
-  }, []);
-
-  function handleSorting(){
-    setSorting(false);
-    fetchData();
-
-  }
-
-  const sortData = () => {
-    if (sortCategory && sortOrder) {
-      let sortedData = [...data];
-      switch (sortCategory) {
-        case "id":
-          sortedData.sort((a, b) => {
-            return sortOrder === "Ascending" ? a.id - b.id : b.id - a.id;
-          });
-          break;
-        case "name":
-          sortedData.sort((a, b) => {
-            return sortOrder === "Ascending"
-              ? a.name.localeCompare(b.name)
-              : b.name.localeCompare(a.name);
-          });
-          break;
-        case "installedDate":
-          sortedData.sort((a, b) => {
-            return sortOrder === "Ascending"
-              ? new Date(a.installedDate).getTime() -
-                  new Date(b.installedDate).getTime()
-              : new Date(b.installedDate).getTime() -
-                  new Date(a.installedDate).getTime();
-          });
-          break;
-        case "tenantName":
-          sortedData.sort((a, b) => {
-            const aName = a.tenantName || "";
-            const bName = b.tenantName || "";
-            return sortOrder === "Ascending"
-              ? aName.localeCompare(bName)
-              : bName.localeCompare(aName);
-          });
-          break;
-        case "reading":
-          sortedData.sort((a, b) => {
-            const aTemperature =
-              a.reading && a.reading.temperature
-                ? parseFloat(a.reading.temperature)
-                : null;
-            const bTemperature =
-              b.reading && b.reading.temperature
-                ? parseFloat(b.reading.temperature)
-                : null;
-
-            if (aTemperature === null && bTemperature === null) return 0;
-            if (aTemperature === null)
-              return sortOrder === "Ascending" ? 1 : -1;
-            if (bTemperature === null)
-              return sortOrder === "Ascending" ? -1 : 1;
-            if (sortOrder === "Ascending") {
-              return aTemperature - bTemperature;
-            } else {
-              return bTemperature - aTemperature;
-            }
-          });
-          break;
-        default:
-          break;
+  function UnitsProperty() {
+    const { isSmallScreen, isLargeScreen } = useSelector(
+      (state: RootState) => state.screenSize
+    );
+    const [data, setData] = useState<UnitData[]>([]);
+    const [showSortModal, setShowSortModal] = useState(false);
+    const [sortCategory, setSortCategory] = useState("");
+    const [sortOrder, setSortOrder] = useState("");
+    const {propertyId} = useParams();
+    const [sorting,setSorting]=useState(false);
+    const navigate = useNavigate();
+  
+    async function fetchData() {
+      try {
+        const response = await axios.get(`http://localhost:8080/unit/property/${propertyId}/list`);
+        setData(response.data);
+        
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-      setData(sortedData);
     }
-    setSorting(true);
-    setShowSortModal(false)
-  };
-
-  return (
-    <>
+    useEffect(() => {
+     
+      fetchData();
+    }, []);
+  
+    function handleSorting(){
+      setSorting(false);
+      fetchData();
+  
+    }
+  
+    const sortData = () => {
+      if (sortCategory && sortOrder) {
+        let sortedData = [...data];
+        switch (sortCategory) {
+          case "id":
+            sortedData.sort((a, b) => {
+              return sortOrder === "Ascending" ? a.id - b.id : b.id - a.id;
+            });
+            break;
+          case "name":
+            sortedData.sort((a, b) => {
+              return sortOrder === "Ascending"
+                ? a.name.localeCompare(b.name)
+                : b.name.localeCompare(a.name);
+            });
+            break;
+          case "installedDate":
+            sortedData.sort((a, b) => {
+              return sortOrder === "Ascending"
+                ? new Date(a.installedDate).getTime() -
+                    new Date(b.installedDate).getTime()
+                : new Date(b.installedDate).getTime() -
+                    new Date(a.installedDate).getTime();
+            });
+            break;
+          case "tenantName":
+            sortedData.sort((a, b) => {
+              const aName = a.tenantName || "";
+              const bName = b.tenantName || "";
+              return sortOrder === "Ascending"
+                ? aName.localeCompare(bName)
+                : bName.localeCompare(aName);
+            });
+            break;
+          case "reading":
+            sortedData.sort((a, b) => {
+              const aTemperature =
+                a.reading && a.reading.temperature
+                  ? parseFloat(a.reading.temperature)
+                  : null;
+              const bTemperature =
+                b.reading && b.reading.temperature
+                  ? parseFloat(b.reading.temperature)
+                  : null;
+  
+              if (aTemperature === null && bTemperature === null) return 0;
+              if (aTemperature === null)
+                return sortOrder === "Ascending" ? 1 : -1;
+              if (bTemperature === null)
+                return sortOrder === "Ascending" ? -1 : 1;
+              if (sortOrder === "Ascending") {
+                return aTemperature - bTemperature;
+              } else {
+                return bTemperature - aTemperature;
+              }
+            });
+            break;
+          default:
+            break;
+        }
+        setData(sortedData);
+      }
+      setSorting(true);
+      setShowSortModal(false)
+    };
+  
+    return (
+      <>
         {isLargeScreen ? <Navbar /> : <MobileNavbar />}
         <div className="relative top-[3rem]">
           <AppBar
@@ -307,7 +307,7 @@ function BuilNav() {
               height: "100%",
             }}
           >
-            <BuilHeader />{" "}
+            <UnitHeader />{" "}
             <div
               style={{
           
@@ -326,13 +326,13 @@ function BuilNav() {
                   
                 }}
               >
-                <BuilTables sortCategory={sortCategory} sortOrder={sortOrder} data={data} setData={setData} />
+                <UnitTables sortCategory={sortCategory} sortOrder={sortOrder} data={data} setData={setData} />
               </div>
             </div>
           </div>
         </div>
       </>
-  );
-}
-
-export default BuilNav;
+    );
+  }
+  
+  export default UnitsProperty;

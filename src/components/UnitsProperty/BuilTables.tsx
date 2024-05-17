@@ -30,10 +30,10 @@ interface BuildingInfo {
   name: string;
   deviceList: DeviceInfo[];
   tenantName: string;
-  installedDate: number;
+  installedDate: string;
 }
 
-function BuilTables({data}) {
+function UnitTables({data}) {
   const { isSmallScreen,isLargeScreen } = useSelector((state: RootState) => state.screenSize);
    const {buildingId} = useParams();
 
@@ -44,7 +44,7 @@ function BuilTables({data}) {
     <div>
       {data?.map((building: BuildingInfo) => (
       <Link to= { isLargeScreen ?`/unit/${buildingId}/${building.id}`:`/homemoreinfo/unit/${building.id}`}>
-        <div key={building.id} style={{ marginBottom: "1.5rem" }}>
+       <div key={building.id} style={{ marginBottom: "1.5rem" }}>
           {isSmallScreen ? (
             <div>
               <div
@@ -619,4 +619,4 @@ function BuilTables({data}) {
   );
 }
 
-export default BuilTables;
+export default UnitTables;

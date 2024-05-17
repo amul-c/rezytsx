@@ -9,17 +9,18 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 const MobileNavbar = () => {
   const location = useLocation();
-  const { buildingId } = useParams();
+  const params = useParams();
   const [currentRoute, setCurrentRoute] = useState(location.pathname);
   const regex = /(\d+)/;
   const matches =currentRoute.match(regex)
   let id=1;
   if (matches) {
      id = parseInt(matches[0]); 
-    console.log(id); 
+   
   } 
   useEffect(() => {
     setCurrentRoute(location.pathname);
+
 
   }, [location.pathname])
 
@@ -35,30 +36,46 @@ const MobileNavbar = () => {
       >
         <div className='flex justify-between items-center h-full px-1'>
 
-          {currentRoute === `/homemoreinfo/${id}` ? (
+          {
+          currentRoute === `/homemoreinfo/${params.propertyId}` ? (
             <div className="flex flex-row gap-2">
               <Link to={"/"}>
                 <button><img className="h-3 w-3" src={back} alt="" /></button>
               </Link>
+              {/* {
+                currentRoute== `/homemoreinfo/building/${params.buildingName}/${params.buildingId}` &&
+              (
+                <>
+                building ${params.buildingName}
+                </>
+              )
+              } */}
               <div className='text-white order-1'>More Info</div>
             </div>
-          ) : currentRoute ===`/unitmoreinfo/${id}` ? (
+          ) : currentRoute ===`/unitmoreinfo/${params.unitId}` ? (
             <div className="flex flex-row gap-2">
               <Link to={"unit"}>
                 <button><img className="h-3 w-3" src={back} alt="" /></button>
               </Link>
               <div className='text-white order-1'>More Info</div>
             </div>
-          ) : (
+          ) : 
+          
+          currentRoute ===`/homemoreinfo/building/${params.buildingName}/${params.unitId}` ?
+          (
+             <div>Building {params.buildingName}</div>
+          )
+          :
+          (
             <div className='text-white order-1'>Property Name</div>
           )}
 
 
 
 
-          {currentRoute == "/" || currentRoute == `/unit/${id}`?
+          {currentRoute == "/" || currentRoute == `/homemoreinfo/unit/${params.unitId}`?
             (
-              <Link className="order-2 " to={currentRoute === "/" ? "/homemoreinfo" : "/unitmoreinfo"}>
+              <Link className="order-2 " to={currentRoute === "/" ? `/homemoreinfo` : "/unitmoreinfo"}>
                 <button className='bg-[#FFFFFF] flex flex-row gap-1 rounded items-center '>
                   <img className="h-6 w-6 p-1" src={exclamation} alt="" />
                   <div className='p-1 text-sm'>MORE INFO</div>
@@ -66,7 +83,7 @@ const MobileNavbar = () => {
               </Link>
             )
             :
-            currentRoute == `/homemoreinfo/${id}` || currentRoute == `/unitmoreinfo/${id}` ?
+            currentRoute == `/homemoreinfo/${params.propertyId}` || currentRoute == `/unitmoreinfo/${params.propertyId}` ?
 
               (
                 <></>
