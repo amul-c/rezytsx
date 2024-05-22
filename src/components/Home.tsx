@@ -10,7 +10,7 @@ import { useState } from "react";
 import Navbar from "./Navbar";
 const Home = () => {
 
-  const [propertyId,setPropertyId]=useState('1')
+  const [propertyId]=useState('1')
   return (
     <>
     <Navbar />

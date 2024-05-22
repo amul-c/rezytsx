@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Accordion, AccordionSummary, Typography } from "@mui/material";
 import batteryImg from "../../assets/images/Battery.png";
 import RedTempImg from "../../assets/images/image5.png";
@@ -20,25 +20,27 @@ interface DeviceInfo {
   connection: string;
   installedDate: number;
 }
+interface TablesProps {
+  sortCategory: string;
+  sortOrder: string;
+  data: DeviceInfo[];
+  setData: (data: DeviceInfo[]) => void;
+}
 
-function Tables({sortCategory,sortOrder,data,setData}) {
-
+function Tables({ sortCategory, sortOrder, data, setData }: TablesProps) {
   const { isSmallScreen } = useSelector((state: RootState) => state.screenSize);
-  const { propertyId, deviceName } = useParams<{
+  const {} = useParams<{
     propertyId: string;
     deviceName: string;
-
   }>();
-
-
 
   useEffect(() => {
     sortData();
   }, [sortCategory, sortOrder]);
 
   const getTemperature = (item: any) => {
-    return item.reading && item?.reading?.temperature?
-       parseFloat(item?.reading?.temperature?.replace("°C", ""))
+    return item.reading && item?.reading?.temperature
+      ? parseFloat(item?.reading?.temperature?.replace("°C", ""))
       : null;
   };
 
@@ -101,22 +103,21 @@ function Tables({sortCategory,sortOrder,data,setData}) {
 
   return (
     <div className="flex flex-col gap-[2rem]">
-       {
-       data?.map((item: DeviceInfo) => (
-        <div style={isSmallScreen ? { alignItems: 'center' } : {} }className="flex flex-col justify-center" key={item.id}>
+      {data?.map((item: DeviceInfo) => (
+        <div
+          style={isSmallScreen ? { alignItems: "center" } : {}}
+          className="flex flex-col justify-center"
+          key={item.id}
+        >
           {isSmallScreen ? (
             <div
               style={{
-             
-              
-           
                 display: "flex",
                 flexDirection: "column",
                 padding: "2rem",
                 borderRadius: "5px",
                 backgroundColor: "white",
                 width: "92%",
-              
               }}
             >
               <Typography
@@ -143,7 +144,7 @@ function Tables({sortCategory,sortOrder,data,setData}) {
                     padding: "0.5rem",
                     paddingRight: "2rem",
                     fontWeight: "400",
-                    backgroundColor: "var(--Shades-25, #EDF1F7)"
+                    backgroundColor: "var(--Shades-25, #EDF1F7)",
                   }}
                 >
                   {item.propertyName}
@@ -279,7 +280,7 @@ function Tables({sortCategory,sortOrder,data,setData}) {
                   padding: "0.5rem",
                   fontWeight: "400",
                   display: "flex",
-          
+
                   width: "100%",
                 }}
               >
@@ -327,7 +328,7 @@ function Tables({sortCategory,sortOrder,data,setData}) {
                     }`,
                     height: "48px",
                     padding: "8px",
-                    marginLeft: "8px", 
+                    marginLeft: "8px",
                     marginRight: "-1.8rem",
                     borderRadius: "5px",
                     width: "228px",
@@ -342,26 +343,23 @@ function Tables({sortCategory,sortOrder,data,setData}) {
             <Accordion
               style={{
                 backgroundColor: "white",
-            
-              
               }}
             >
               <AccordionSummary
                 id="myc"
                 style={{
                   height: "72px",
-               
+
                   backgroundColor: "white",
                   display: "flex",
-                
+
                   alignItems: "center",
                   width: "100%",
                   padding: "0 12px",
-                  borderRadius:'1rem'
+                  borderRadius: "1rem",
                 }}
               >
                 <table style={{ width: "100%" }}>
-                  
                   <tbody>
                     <tr>
                       <td

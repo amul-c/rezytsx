@@ -3,26 +3,24 @@ import cosensor from "../../assets/cosensor.png";
 import tempsensor from "../../assets/tempsensor.png";
 import watermeters from "../../assets/watermeters.png";
 import arrow from "../../assets/arrow.png";
-import thumbnail from "../../assets/thumbnail.png"
-const InstalledDevicesUnitWise = ({ unitData }) => {
-  const iconMapping = {
+import thumbnail from "../../assets/thumbnail.png";
+const InstalledDevicesUnitWise = ({ unitData }: any) => {
+  const iconMapping: { [key: string]: string } = {
     firealarm: fire,
     cosensor: cosensor,
     tempsensor: tempsensor,
     watermeters: watermeters,
   };
 
- 
   const { deviceCount } = unitData;
 
-
-  const devices = deviceCount ? Object.keys(deviceCount).map((deviceType) => ({
-    device_type: deviceType,
-    count: deviceCount[deviceType],
-    icon: iconMapping[deviceType.toLowerCase().replace(/\s+/g, "")], // Get the icon based on the device type
-  })) : [];
-   
-  
+  const devices = deviceCount
+    ? Object.keys(deviceCount).map((deviceType) => ({
+        device_type: deviceType,
+        count: deviceCount[deviceType],
+        icon: iconMapping[deviceType.toLowerCase().replace(/\s+/g, "")],
+      }))
+    : [];
 
   return (
     <>
@@ -43,23 +41,24 @@ const InstalledDevicesUnitWise = ({ unitData }) => {
                   }}
                   className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#5C626E] pl-1 rounded-l-xl"
                 >
-                  {item.icon ? ( // Check if icon exists
+                  {item.icon ? (
                     <img
                       className="h-6 w-6 inline-block align-middle"
                       style={{ marginRight: "8px" }}
                       src={item.icon}
                       alt=""
                     />
-                  )
-                :
-                ( <img
-                  className="h-6 w-6 inline-block align-middle"
-                  style={{ marginRight: "8px" }}
-                  src={thumbnail}
-                  alt=""
-                />)
-                }
-                  <div className="inline-block align-middle">{item.device_type}</div>
+                  ) : (
+                    <img
+                      className="h-6 w-6 inline-block align-middle"
+                      style={{ marginRight: "8px" }}
+                      src={thumbnail}
+                      alt=""
+                    />
+                  )}
+                  <div className="inline-block align-middle">
+                    {item.device_type}
+                  </div>
                 </td>
 
                 <td

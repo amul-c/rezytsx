@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 interface ScreenSizeState {
   isSmallScreen: boolean;
@@ -11,7 +11,7 @@ const initialState: ScreenSizeState = {
 };
 
 const screenSizeSlice = createSlice({
-  name: 'screenSize',
+  name: "screenSize",
   initialState,
   reducers: {
     setSmallScreen(state) {

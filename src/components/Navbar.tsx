@@ -12,7 +12,6 @@ import { Button } from "@mui/material";
 import PropertyImage from "../assets/property.png";
 import { useLocation } from 'react-router-dom';
 import { useParams } from "react-router-dom";
-import { useURLParams } from "../UrlParamsContext"; 
 
 
 export default function Navbar() {

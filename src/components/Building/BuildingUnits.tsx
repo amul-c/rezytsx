@@ -8,38 +8,41 @@ import {
 } from "@mui/material";
 import { Sort } from "@mui/icons-material";
 import BuilImg from "../../assets/images/bluebuil.png";
+import BuilHeader from "./BuilHeader.tsx";
+import BuilTables from "./BuilTables.tsx";
 import FilterIcon from "../../assets/images/filterIcon.png";
 import PropertyImg from "../../assets/images/bluebuil.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store.ts";
 import { useState, useEffect } from "react";
-import Navbar from "../Navbar";
-import MobileNavbar from "../MobileNavbar";
+import Navbar from "../Navbar.tsx";
+import MobileNavbar from "../MobileNavbar.tsx";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import UnitTables from "./BuilTables.tsx";
-import UnitHeader from "./BuilHeader.tsx";
+
+interface DeviceInfo {
+  id: number;
+  reading: {
+    temperature?: string;
+    humidity: string;
+  };
+  name: string;
+  propertyName: string | null;
+  battery: number;
+  connection: string;
+  installedDate: number;
+}
 
 interface UnitData {
   id: number;
   name: string;
-  installedDate: string;
-  reading: {
-    temperature: string;
-  };
-  tenantName: string;
-}
-
-interface BuildingInfo {
-  id: number;
-  name: string;
-  deviceList: any[];
+  deviceList: DeviceInfo[];
   tenantName: string;
   installedDate: string;
 }
 
-function UnitsProperty() {
+function BuildingUnits() {
   const { isSmallScreen, isLargeScreen } = useSelector(
     (state: RootState) => state.screenSize
   );
@@ -47,20 +50,21 @@ function UnitsProperty() {
   const [showSortModal, setShowSortModal] = useState(false);
   const [sortCategory, setSortCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const { propertyId } = useParams() || {};
+  const { buildingId } = useParams();
   const [sorting, setSorting] = useState(false);
   const navigate = useNavigate();
 
   async function fetchData() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/unit/property/${propertyId}/list`
+        `http://localhost:8080/unit/building/${buildingId}/list`
       );
       setData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -69,18 +73,6 @@ function UnitsProperty() {
     setSorting(false);
     fetchData();
   }
-
-  const transformUnitDataToBuildingInfo = (
-    unitData: UnitData[]
-  ): BuildingInfo[] => {
-    return unitData.map((unit: UnitData) => ({
-      id: unit.id,
-      name: unit.name,
-      deviceList: [],
-      tenantName: unit.tenantName,
-      installedDate: unit.installedDate,
-    }));
-  };
 
   const sortData = () => {
     if (sortCategory && sortOrder) {
@@ -114,29 +106,6 @@ function UnitsProperty() {
             return sortOrder === "Ascending"
               ? aName.localeCompare(bName)
               : bName.localeCompare(aName);
-          });
-          break;
-        case "reading":
-          sortedData.sort((a, b) => {
-            const aTemperature =
-              a.reading && a.reading.temperature
-                ? parseFloat(a.reading.temperature)
-                : null;
-            const bTemperature =
-              b.reading && b.reading.temperature
-                ? parseFloat(b.reading.temperature)
-                : null;
-
-            if (aTemperature === null && bTemperature === null) return 0;
-            if (aTemperature === null)
-              return sortOrder === "Ascending" ? 1 : -1;
-            if (bTemperature === null)
-              return sortOrder === "Ascending" ? -1 : 1;
-            if (sortOrder === "Ascending") {
-              return aTemperature - bTemperature;
-            } else {
-              return bTemperature - aTemperature;
-            }
           });
           break;
         default:
@@ -277,9 +246,8 @@ function UnitsProperty() {
           <div className="w-[35rem] min-h-[10rem] bg-neutral-100 absolute top-[10rem] right-[2rem] rounded shadow-lg z-50">
             <div className="font-semibold m-4 text-xl font-serif">Sorting</div>
             <div className="flex flex-row justify-center h-full gap-10">
-              <form className="max-w-sm">
+              <form className="max-w-sm ">
                 <select
-                  data-testid="sort-select"
                   value={sortCategory}
                   onChange={(e) => setSortCategory(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -332,7 +300,7 @@ function UnitsProperty() {
             height: "100%",
           }}
         >
-          <UnitHeader />{" "}
+          <BuilHeader />{" "}
           <div
             style={{
               display: "flex",
@@ -348,7 +316,7 @@ function UnitsProperty() {
                 borderRadius: "0.5rem",
               }}
             >
-              <UnitTables data={transformUnitDataToBuildingInfo(data)} />
+              <BuilTables data={data} />
             </div>
           </div>
         </div>
@@ -357,4 +325,4 @@ function UnitsProperty() {
   );
 }
 
-export default UnitsProperty;
+export default BuildingUnits;

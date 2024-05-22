@@ -1,205 +1,304 @@
-  import tenant from "../../assets/tenantwhole.png"
-  import bluefilter from "../../assets/bluefilter.png"
-  import box from "../../assets/box.png"
-  import dustbin from "../../assets/dustbin.png"
-  import beldon from "../../assets/belldon.png"
-  import unit from "../../assets/unit.png"
-  import divide from "../../assets/break.png"
-  import { useEffect, useState } from "react";
-  import axios from 'axios';
-  import Navbar from "../Navbar"
-import { useParams } from "react-router-dom"
-  const TenantList = () => {
+import tenant from "../../assets/tenantwhole.png";
+import bluefilter from "../../assets/bluefilter.png";
+import box from "../../assets/box.png";
+import dustbin from "../../assets/dustbin.png";
+import beldon from "../../assets/belldon.png";
+import unit from "../../assets/unit.png";
+import divide from "../../assets/break.png";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Navbar from "../Navbar";
+import { useParams } from "react-router-dom";
 
-  const [data,setData]=useState([]);
-  const [showSortModal,setShowSortModal]=useState(false);
+interface Tenant {
+  id: number;
+  name: string;
+  role: string;
+  joined: string;
+  phone: string;
+  email: string;
+  unitCount: string;
+}
+
+const TenantList = () => {
+  const [data, setData] = useState<Tenant[]>([]);
+  const [showSortModal, setShowSortModal] = useState(false);
   const [sortCategory, setSortCategory] = useState("");
   const [sortOrder, setSortOrder] = useState("");
-  const {propertyId}=useParams();
-  const [sorting,setSorting]=useState(false);
+  const { propertyId } = useParams();
+  const [sorting, setSorting] = useState(false);
 
-    interface Header {
-      name: string;
-    }
+  interface Header {
+    name: string;
+  }
 
-    const tableHeaders: Header[] = [
-      { name: "NAME" },
-      { name: "ROLE" },
-      { name: "JOINED" },
-      { name: "PHONE" },
-      { name: "EMAIL" },
-      { name: "PROPERTY" },
-      { name: "ACTION" },
-    ];
+  const tableHeaders: Header[] = [
+    { name: "NAME" },
+    { name: "ROLE" },
+    { name: "JOINED" },
+    { name: "PHONE" },
+    { name: "EMAIL" },
+    { name: "PROPERTY" },
+    { name: "ACTION" },
+  ];
 
-       
-    async function getData() {
-      try {
-        const response = await axios.get(`http://localhost:8080/tenant/property/${propertyId}`);
-      
-        setData(response.data); 
-      } catch (error) {
-        console.error("Error fetching data:", error.message);
+  async function getData() {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/tenant/property/${propertyId}`
+      );
+
+      if (response.data) {
+        setData(response.data);
+      } else {
+        console.error("Error fetching data: Response data is empty");
       }
+    } catch (error) {
+      console.error("Error fetching data:", (error as Error).message);
     }
-    const handleDelete = async (id: number) => {
-      try {
-        await axios.delete(`http://localhost:8080/tenant/${id}`);
-        const updatedData = data.filter((item) => item.id !== id);
-        setData(updatedData);
-      } catch (error) {
-        console.error("Error deleting data:", error.message);
-      }
-    };
-    function handleSorting(){
-      setSorting(false);
-      getData()
-  
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      await axios.delete(`http://localhost:8080/tenant/${id}`);
+      const updatedData = data.filter((item) => item.id !== id);
+      setData(updatedData);
+    } catch (error) {
+      console.error("Error fetching data:", (error as any).message);
     }
+  };
+  function handleSorting() {
+    setSorting(false);
+    getData();
+  }
 
-    useEffect(() => {
-      getData();
-    }, []);
-    useEffect(()=>{getData()},[])
+  useEffect(() => {
+    getData();
+  }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
-    function SortData() {
-      if (sortCategory && sortOrder) {
-        let sortedData = [...data];
-        switch (sortCategory) {
-          case "name": // Change to lowercase "name"
-            sortedData.sort((a, b) => {
-              const nameA = a.name.toLowerCase(); // Convert names to lowercase
-              const nameB = b.name.toLowerCase();
-              if (sortOrder === "Ascending") {
-                return nameA.localeCompare(nameB);
-              } else if (sortOrder === "Descending") {
-                return nameB.localeCompare(nameA);
-              }
-              return 0;
-            });
-            break;
-          case "Joined":
-            sortedData.sort((a, b) => {
-              const dateA = new Date(a.joined);
-              const dateB = new Date(b.joined);
-              if (sortOrder === "Ascending") {
-                return dateA - dateB;
-              } else if (sortOrder === "Descending") {
-                return dateB - dateA;
-              }
-              return 0;
-            });
-            break;
-          case "propertyName":
-          case "unitName":
-            sortedData.sort((a, b) => {
-              const unitA = parseInt(a.unitCount, 10);
+  function SortData() {
+    if (sortCategory && sortOrder) {
+      let sortedData = [...data];
+      switch (sortCategory) {
+        case "name":
+          sortedData.sort((a, b) => {
+            const nameA = a.name.toLowerCase(); 
+            const nameB = b.name.toLowerCase();
+            if (sortOrder === "Ascending") {
+              return nameA.localeCompare(nameB);
+            } else if (sortOrder === "Descending") {
+              return nameB.localeCompare(nameA);
+            }
+            return 0;
+          });
+          break;
+        case "Joined":
+          sortedData.sort((a, b) => {
+            const dateA = new Date(a.joined);
+            const dateB = new Date(b.joined);
+            if (sortOrder === "Ascending") {
+              return (dateA as any) - (dateB as any);
+            } else if (sortOrder === "Descending") {
+              return (dateA as any) - (dateB as any);
+            }
+            return 0;
+          });
+          break;
+        case "propertyName":
+        case "unitName":
+          sortedData.sort((a, b) => {
+            const unitA = parseInt(a.unitCount, 10);
             const unitB = parseInt(b.unitCount, 10);
-            if (sortOrder === 'Ascending') {
+            if (sortOrder === "Ascending") {
               return unitA - unitB;
-            } else if (sortOrder === 'Descending') {
+            } else if (sortOrder === "Descending") {
               return unitB - unitA;
             }
             return 0;
-            });
-            break;
-          default:
-            break;
-        }
-        setData(sortedData);
+          });
+          break;
+        default:
+          break;
       }
-      setShowSortModal(false);
-      setSorting(true);
+      setData(sortedData);
     }
-    
-     
-  
+    setShowSortModal(false);
+    setSorting(true);
+  }
 
-
-    return (
-      <>
+  return (
+    <>
       <Navbar />
-        <div className="bg-[#EDF1F7]  flex flex-col mb-4 mx-4 rounded-t-lg relative top-[6rem]">
-          <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
-            <div className="flex flex-row gap-1 order-1 items-ceter justify-center">
-              <img src={tenant} alt="" className="h-6 w-6" />
-              <div className="text-[#01337C]">Tenant List</div>
-            </div>
+      <div className="bg-[#EDF1F7]  flex flex-col mb-4 mx-4 rounded-t-lg relative top-[6rem]">
+        <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
+          <div className="flex flex-row gap-1 order-1 items-ceter justify-center">
+            <img src={tenant} alt="" className="h-6 w-6" />
+            <div className="text-[#01337C]">Tenant List</div>
+          </div>
 
-            <div className='flex flex-row gap-1 order-2'>
-            {sorting 
-            &&
-            <button onClick={handleSorting}className='text-red-600 mr-2'>clear sorting</button>
-          }
-              <button onClick={()=>{setShowSortModal(!showSortModal)}}id="sortBy " className="flex flex-row items-center gap-2 justify-center bg-[#C0D9FF] p-1 rounded items-center justify-center">
-                <div className="bg-[#C0D9FF]" >SORT BY</div>
-                <img className="h-6 w-6 " id="filter" src={bluefilter} alt="" />
+          <div className="flex flex-row gap-1 order-2">
+            {sorting && (
+              <button onClick={handleSorting} className="text-red-600 mr-2">
+                clear sorting
               </button>
-              <div id="count"></div>
-            </div>
-          </header>
+            )}
+            <button
+              onClick={() => {
+                setShowSortModal(!showSortModal);
+              }}
+              id="sortBy "
+              className="flex flex-row items-center gap-2 justify-center bg-[#C0D9FF] p-1 rounded items-center justify-center"
+            >
+              <div className="bg-[#C0D9FF]">SORT BY</div>
+              <img className="h-6 w-6 " id="filter" src={bluefilter} alt="" />
+            </button>
+            <div id="count"></div>
+          </div>
+        </header>
 
-          <div id="content" className="">
-            <>
-              <div className=' lg:w-[100%]  2xl:w-[100%] sm:w-full xs:w-full rounded-lg w-[100%] flex justify-center'>
-                <table className="w-[95%] divide  -y divide-gray-200 border-separate border-spacing-y-3 md:m-4 lg:m-4 m-[10px] ">
-                  <thead className="bg-[#01337C] text-white-800 " style={{background: 'linear-gradient(231.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)',
-  }}>
-                    <tr className="">
-                      {tableHeaders.map((header) => (
-                        <th
-                          key={header.name} 
-                          scope="col"
-                          className= {` ${header.name=="NAME" && "rounded-l-lg"}  ${header.name=="ACTION" && "  rounded-r-lg text-end"} xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-3 text-start text-xs font-medium uppercase text-white`} 
-                        >
-                          {header.name}
-
-                        </th>
-                      ))}
-
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    {data?.map((item, index) => (
-                      <tr key={index} className="bg-[white]">
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="rounded-l-xl px-6 py-4 whitespace-nowrap text-sm font-sm ">{item.name}</td>
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm font-sm "><div className="bg-[#EDF1F7] h-[2rem] items-center flex justify-center">{item.role}</div></td> {/* Use item.role from data */}
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm ">{item.joined}</td>
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm  ">{item.phone}</td>
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm ">{item.email}</td>
-                        <td style={{ lineHeight: '3px',color:'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm ">
-                          <div className="flex flex-row gap-2 bg-[#EDF1F7] h-[2.5rem] items-center justify-center rounded w-[fit-content] p-2">
+        <div id="content" className="">
+          <>
+            <div className=" lg:w-[100%]  2xl:w-[100%] sm:w-full xs:w-full rounded-lg w-[100%] flex justify-center">
+              <table className="w-[95%] divide  -y divide-gray-200 border-separate border-spacing-y-3 md:m-4 lg:m-4 m-[10px] ">
+                <thead
+                  className="bg-[#01337C] text-white-800 "
+                  style={{
+                    background:
+                      "linear-gradient(231.98deg, #01337C 28.19%, #013A8C 28.2%, #013A8C 96.59%, #00C17B 119.39%)",
+                  }}
+                >
+                  <tr className="">
+                    {tableHeaders.map((header) => (
+                      <th
+                        key={header.name}
+                        scope="col"
+                        className={` ${
+                          header.name == "NAME" && "rounded-l-lg"
+                        }  ${
+                          header.name == "ACTION" && "  rounded-r-lg text-end"
+                        } xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-3 text-start text-xs font-medium uppercase text-white`}
+                      >
+                        {header.name}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {data?.map((item, index) => (
+                    <tr key={index} className="bg-[white]">
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="rounded-l-xl px-6 py-4 whitespace-nowrap text-sm font-sm "
+                      >
+                        {item.name}
+                      </td>
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm font-sm "
+                      >
+                        <div className="bg-[#EDF1F7] h-[2rem] items-center flex justify-center">
+                          {item.role}
+                        </div>
+                      </td>{" "}
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm "
+                      >
+                        {item.joined}
+                      </td>
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm  "
+                      >
+                        {item.phone}
+                      </td>
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm "
+                      >
+                        {item.email}
+                      </td>
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          color: "rgba(0, 0, 0, 0.8)",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm "
+                      >
+                        <div className="flex flex-row gap-2 bg-[#EDF1F7] h-[2.5rem] items-center justify-center rounded w-[fit-content] p-2">
                           <div className="flex flex-row gap-1 items-center text-[rgba(92, 98, 110, 0.7)]">
-                          <img className="h-4 w-4" src={beldon} alt="" />
-                          <div style={{color:'rgba(92, 98, 110, 0.7)'}} className="text-[rgba(92, 98, 110, 0.7)]"></div>
+                            <img className="h-4 w-4" src={beldon} alt="" />
+                            <div
+                              style={{ color: "rgba(92, 98, 110, 0.7)" }}
+                              className="text-[rgba(92, 98, 110, 0.7)]"
+                            ></div>
                           </div>
                           <img className="h-4 " src={divide} alt="" />
 
                           <div className="flex flex-row gap-1 items-center text-[rgba(92, 98, 110, 0.7)]">
-                          <img className="h-4 w-4" src={unit} alt="" />
-                          <div  style={{color:'rgba(92, 98, 110, 0.7)'}}  className="text-[rgba(92, 98, 110, 0.7)]"></div>
+                            <img className="h-4 w-4" src={unit} alt="" />
+                            <div
+                              style={{ color: "rgba(92, 98, 110, 0.7)" }}
+                              className="text-[rgba(92, 98, 110, 0.7)]"
+                            ></div>
                           </div>
-                          </div>
-                          </td>
-                          <td style={{ lineHeight: '3px', verticalAlign: 'middle', textAlign: 'right' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm text-gray-800 rounded-r-xl">
-      <div className="flex flex-row-reverse gap-2">
-       
- <img className="h-6 w-6" src={box} alt="" style={{ margin: '0', padding: '0' }} />
- <button onClick={() => handleDelete(item.id)}>
-<img className="h-6 w-6" src={dustbin} alt="" style={{ margin: '0', padding: '0' }} />
-</button>  
-      </div>
-  </td>
-
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          </div>
+                        </div>
+                      </td>
+                      <td
+                        style={{
+                          lineHeight: "3px",
+                          verticalAlign: "middle",
+                          textAlign: "right",
+                        }}
+                        className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm text-gray-800 rounded-r-xl"
+                      >
+                        <div className="flex flex-row-reverse gap-2">
+                          <img
+                            className="h-6 w-6"
+                            src={box}
+                            alt=""
+                            style={{ margin: "0", padding: "0" }}
+                          />
+                          <button
+                            data-testid="delete-button"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            <img
+                              className="h-6 w-6"
+                              src={dustbin}
+                              alt="Delete"
+                              style={{ margin: "0", padding: "0" }}
+                            />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         </div>
-        {showSortModal && (
+      </div>
+      {showSortModal && (
         <div className="w-[35rem] min-h-[10rem] bg-neutral-100 absolute top-[10rem] right-[2rem] rounded shadow-lg">
           <div className="font-semibold m-4 text-xl font-serif">Sorting</div>
           <div className="flex flex-row justify-center h-full gap-10">
@@ -229,17 +328,23 @@ import { useParams } from "react-router-dom"
             </form>
           </div>
           <div className="flex flex-row gap-2 absolute bottom-1 right-1 m-2">
-            <button onClick={SortData} className="h-8 w-14 bg-blue-700 text-neutral-100 rounded">
+            <button
+              onClick={SortData}
+              className="h-8 w-14 bg-blue-700 text-neutral-100 rounded"
+            >
               Apply
             </button>
-            <button onClick={() => setShowSortModal(false)} className="bg-red-400 rounded h-8 w-14 text-neutral-100">
+            <button
+              onClick={() => setShowSortModal(false)}
+              className="bg-red-400 rounded h-8 w-14 text-neutral-100"
+            >
               Cancel
             </button>
           </div>
         </div>
       )}
-      </>
-    )
-  }
+    </>
+  );
+};
 
-  export default TenantList
+export default TenantList;

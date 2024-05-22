@@ -11,13 +11,7 @@ const MobileNavbar = () => {
   const location = useLocation();
   const params = useParams();
   const [currentRoute, setCurrentRoute] = useState(location.pathname);
-  const regex = /(\d+)/;
-  const matches =currentRoute.match(regex)
-  let id=1;
-  if (matches) {
-     id = parseInt(matches[0]); 
-   
-  } 
+
   useEffect(() => {
     setCurrentRoute(location.pathname);
 
@@ -42,14 +36,7 @@ const MobileNavbar = () => {
               <Link to={"/"}>
                 <button><img className="h-3 w-3" src={back} alt="" /></button>
               </Link>
-              {/* {
-                currentRoute== `/homemoreinfo/building/${params.buildingName}/${params.buildingId}` &&
-              (
-                <>
-                building ${params.buildingName}
-                </>
-              )
-              } */}
+         
               <div className='text-white order-1'>More Info</div>
             </div>
           ) : currentRoute ===`/unitmoreinfo/${params.unitId}` ? (

@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
-import building from '../../assets/bluebuilding.png';
-import bluefilter from '../../assets/bluefilter.png';
-import arrow from '../../assets/arrow.png';
-import buildingunit from '../../assets/buildingunits.png';
-import devices from '../../assets/buildingdevices.png';
-import alarms from '../../assets/buildingalarms.png';
-import screws from '../../assets/buildingscrew.png';
-import divide from '../../assets/break.png';
-import th from '../../assets/thumbnail.png';
-import back from '../../assets/back.png';
-import Navbar from '../Navbar';
-import { RootState } from '../../store';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+import building from "../../assets/bluebuilding.png";
+import bluefilter from "../../assets/bluefilter.png";
+import arrow from "../../assets/arrow.png";
+import buildingunit from "../../assets/buildingunits.png";
+import devices from "../../assets/buildingdevices.png";
+import alarms from "../../assets/buildingalarms.png";
+import screws from "../../assets/buildingscrew.png";
+import divide from "../../assets/break.png";
+import th from "../../assets/thumbnail.png";
+import back from "../../assets/back.png";
+import Navbar from "../Navbar";
+import { RootState } from "../../store";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface Building {
   id: string;
@@ -27,24 +27,26 @@ const Building = () => {
   const { isLargeScreen } = useSelector((state: RootState) => state.screenSize);
   const [data, setData] = useState<Building[]>([]);
   const [showSortModal, setShowSortModal] = useState(false);
-  const [sortCategory, setSortCategory] = useState('');
-  const [sortOrder, setSortOrder] = useState('');
+  const [sortCategory, setSortCategory] = useState("");
+  const [sortOrder, setSortOrder] = useState("");
   const { propertyId } = useParams<{ propertyId: string }>();
-  const [sorting,setSorting]=useState(false);
+  const [sorting, setSorting] = useState(false);
   const navigate = useNavigate();
 
   async function getData() {
     try {
-      const response = await axios.get<Building[]>(`http://localhost:8080/building/property/${propertyId}/list`);
+      const response = await axios.get<Building[]>(
+        `http://localhost:8080/building/property/${propertyId}/list`
+      );
       setData(response.data);
     } catch (error) {
       console.log(error);
     }
   }
 
-  function handleSorting(){
+  function handleSorting() {
     setSorting(false);
-   getData()
+    getData();
   }
 
   useEffect(() => {
@@ -55,35 +57,35 @@ const Building = () => {
     if (sortCategory && sortOrder) {
       let sortedData = [...data];
       switch (sortCategory) {
-        case 'buildings':
+        case "buildings":
           sortedData.sort((a, b) => {
-            if (sortOrder === 'Ascending') {
+            if (sortOrder === "Ascending") {
               return a.name.localeCompare(b.name);
-            } else if (sortOrder === 'Descending') {
+            } else if (sortOrder === "Descending") {
               return b.name.localeCompare(a.name);
             }
             return 0;
           });
           break;
-        case 'units':
+        case "units":
           sortedData.sort((a, b) => {
-            const unitA = parseInt(a.unitCount, 10);
-            const unitB = parseInt(b.unitCount, 10);
-            if (sortOrder === 'Ascending') {
+            const unitA = sortAsInteger(a.unitCount);
+            const unitB = sortAsInteger(b.unitCount);
+            if (sortOrder === "Ascending") {
               return unitA - unitB;
-            } else if (sortOrder === 'Descending') {
+            } else if (sortOrder === "Descending") {
               return unitB - unitA;
             }
             return 0;
           });
           break;
-        case 'devices':
+        case "devices":
           sortedData.sort((a, b) => {
-            const deviceA = parseInt(a.deviceCount, 10);
-            const deviceB = parseInt(b.deviceCount, 10);
-            if (sortOrder === 'Ascending') {
+            const deviceA = sortAsInteger(a.deviceCount);
+            const deviceB = sortAsInteger(b.deviceCount);
+            if (sortOrder === "Ascending") {
               return deviceA - deviceB;
-            } else if (sortOrder === 'Descending') {
+            } else if (sortOrder === "Descending") {
               return deviceB - deviceA;
             }
             return 0;
@@ -97,7 +99,13 @@ const Building = () => {
     setShowSortModal(false);
     setSorting(true);
   }
-  
+
+  function sortAsInteger(value: string | number): number {
+    if (typeof value === "string") {
+      return parseInt(value, 10);
+    }
+    return value;
+  }
 
   return (
     <>
@@ -106,20 +114,23 @@ const Building = () => {
         <header className="flex flex-row justify-between bg-[white]  h-[3rem] rounded-t-lg items-center px-1">
           <div className="flex flex-row gap-1 order-1 items-center justify-center ">
             <button onClick={() => navigate(-1)}>
-            <img  className="h-6 w-6" src={back} alt="" />
-           
-
+              <img className="h-6 w-6" src={back} alt="" />
             </button>
             <img src={building} alt="" className="h-6 w-6" />
             <div className="text-[#01337C]">Property Name</div>
           </div>
 
           <div className="flex flex-row gap-1 order-2">
-            {sorting 
-            &&
-            <button onClick={handleSorting}className='text-red-600 mr-2'>clear sorting</button>
-          }
-            <button onClick={() => setShowSortModal(!showSortModal)} id="sortBy" className="flex flex-row items-center gap-2 justify-center bg-[#C0D9FF] p-1 rounded items-center justify-center">
+            {sorting && (
+              <button onClick={handleSorting} className="text-red-600 mr-2">
+                clear sorting
+              </button>
+            )}
+            <button
+              onClick={() => setShowSortModal(!showSortModal)}
+              id="sortBy"
+              className="flex flex-row items-center gap-2 justify-center bg-[#C0D9FF] p-1 rounded items-center justify-center"
+            >
               <div className="bg-[#C0D9FF]">SORT BY</div>
               <img className="h-6 w-6 " id="filter" src={bluefilter} alt="" />
             </button>
@@ -133,34 +144,74 @@ const Building = () => {
                 <tbody className="divide-y divide-gray-200 flex flex-col gap-[19px]">
                   {data.map((item, index) => (
                     <Link
-                      to={isLargeScreen ? `/building/${item.id}` : `/homemoreinfo/building/${item.name}/${item.id}`}
+                      to={
+                        isLargeScreen
+                          ? `/building/${item.id}`
+                          : `/homemoreinfo/building/${item.name}/${item.id}`
+                      }
                       className="bg-[white] block"
                       key={index}
                     >
                       <tr className="bg-[white] w-[100%] flex justify-between">
-                        <td style={{ lineHeight: '3px', color: 'rgba(0, 0, 0, 0.8)' }} className="rounded-l-xl px-6 py-4 whitespace-nowrap text-sm font-sm items-center flex">
+                        <td
+                          style={{
+                            lineHeight: "3px",
+                            color: "rgba(0, 0, 0, 0.8)",
+                          }}
+                          className="rounded-l-xl px-6 py-4 whitespace-nowrap text-sm font-sm items-center flex"
+                        >
                           <div className="flex flex-row items-center gap-1">
                             <img className="h-4 w-4" src={th} alt="" />
                             <div>Building {item.name}</div>
                           </div>
                         </td>
-                        <td style={{ lineHeight: '3px', color: 'rgba(0, 0, 0, 0.8)' }} className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm flex justify-end">
+                        <td
+                          style={{
+                            lineHeight: "3px",
+                            color: "rgba(0, 0, 0, 0.8)",
+                          }}
+                          className="xl:px-6 lg:px-6 sm:px-2 xs:px-2 py-4 whitespace-nowrap text-sm flex justify-end"
+                        >
                           <div className="flex flex-row gap-1 items-center">
-                            <div style={{ backgroundColor: 'rgba(255, 153, 0, 0.2)' }} className="h-10 w-10 bg-[rgba(255, 83, 73, 0.2)] rounded items-center justify-center flex">
+                            <div
+                              style={{
+                                backgroundColor: "rgba(255, 153, 0, 0.2)",
+                              }}
+                              className="h-10 w-10 bg-[rgba(255, 83, 73, 0.2)] rounded items-center justify-center flex"
+                            >
                               <img className="h-6 w-6 " src={screws} alt="" />
                             </div>
-                            <div style={{ backgroundColor: 'rgba(255, 83, 73, 0.2)' }} className="h-10 w-10 bg-[rgba(255, 83, 73, 0.2)] rounded items-center justify-center flex">
+                            <div
+                              style={{
+                                backgroundColor: "rgba(255, 83, 73, 0.2)",
+                              }}
+                              className="h-10 w-10 bg-[rgba(255, 83, 73, 0.2)] rounded items-center justify-center flex"
+                            >
                               <img className="h-6 w-6 " src={alarms} alt="" />
                             </div>
                             <div className="flex flex-row gap-2 bg-[#EDF1F7] h-[2.5rem] items-center justify-center rounded w-[fit-content] p-2">
                               <div className="flex flex-row gap-1 items-center text-[rgba(92, 98, 110, 0.7)]">
-                                <img className="h-4 w-4" src={buildingunit} alt="" />
-                                <div style={{ color: 'rgba(92, 98, 110, 0.7)' }} className="text-[rgba(92, 98, 110, 0.7)]">UNITS {item.unitCount}</div>
+                                <img
+                                  className="h-4 w-4"
+                                  src={buildingunit}
+                                  alt=""
+                                />
+                                <div
+                                  style={{ color: "rgba(92, 98, 110, 0.7)" }}
+                                  className="text-[rgba(92, 98, 110, 0.7)]"
+                                >
+                                  UNITS {item.unitCount}
+                                </div>
                               </div>
                               <img className="h-4 " src={divide} alt="" />
                               <div className="flex flex-row gap-1 items-center text-[rgba(92, 98, 110, 0.7)]">
                                 <img className="h-4 w-4" src={devices} alt="" />
-                                <div style={{ color: 'rgba(92, 98, 110, 0.7)' }} className="text-[rgba(92, 98, 110, 0.7)]">Devices {item.deviceCount}</div>
+                                <div
+                                  style={{ color: "rgba(92, 98, 110, 0.7)" }}
+                                  className="text-[rgba(92, 98, 110, 0.7)]"
+                                >
+                                  Devices {item.deviceCount}
+                                </div>
                               </div>
                             </div>
                             <img className="h-6 w-6 " src={arrow} alt="" />
@@ -206,10 +257,16 @@ const Building = () => {
             </form>
           </div>
           <div className="flex flex-row gap-2 absolute bottom-1 right-1 m-2">
-            <button onClick={SortData} className="h-8 w-14 bg-blue-700 text-neutral-100 rounded">
+            <button
+              onClick={SortData}
+              className="h-8 w-14 bg-blue-700 text-neutral-100 rounded"
+            >
               Apply
             </button>
-            <button onClick={() => setShowSortModal(false)} className="bg-red-400 rounded h-8 w-14 text-neutral-100">
+            <button
+              onClick={() => setShowSortModal(false)}
+              className="bg-red-400 rounded h-8 w-14 text-neutral-100"
+            >
               Cancel
             </button>
           </div>

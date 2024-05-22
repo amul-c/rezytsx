@@ -4,8 +4,8 @@ import phone from "../../assets/phone.png";
 import email from "../../assets/email.png";
 import unitstatus from "../../assets/unitstatus.png";
 
-const UnitInfo = ({ unitData }) => {
-  const iconMapping = {
+const UnitInfo = ({ unitData }: any) => {
+  const iconMapping: { [key: string]: string } = {
     tenant: tenant,
     phone: phone,
     email: email,
@@ -52,10 +52,24 @@ const UnitInfo = ({ unitData }) => {
                   style={{ lineHeight: "3px", verticalAlign: "middle" }}
                   className="rounded-l-xl pr-6 pl-2 py-4 whitespace-nowrap text-sm font-medium text-[#5C626E]"
                 >
-                  <div style={{ display: "inline-block", marginRight: "8px", verticalAlign: "middle" }}>
-                    <img className="h-6 w-6" src={iconMapping[item.icon]} alt="" />
+                  <div
+                    style={{
+                      display: "inline-block",
+                      marginRight: "8px",
+                      verticalAlign: "middle",
+                    }}
+                  >
+                    <img
+                      className="h-6 w-6"
+                      src={iconMapping[item.icon]}
+                      alt=""
+                    />
                   </div>
-                  <div style={{ display: "inline-block", verticalAlign: "middle" }}>{item.device_type}</div>
+                  <div
+                    style={{ display: "inline-block", verticalAlign: "middle" }}
+                  >
+                    {item.device_type}
+                  </div>
                 </td>
 
                 <td
